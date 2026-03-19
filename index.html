@@ -620,7 +620,8 @@
 
   /* VISION */
   .vision {
-    background: var(--ink);
+    background: linear-gradient(to bottom, rgba(26,23,18,.82) 0%, rgba(26,23,18,.88) 100%),
+      url('belief-bg.jpg') center/cover no-repeat fixed;
     padding: 100px 60px;
     position: relative;
     overflow: hidden;
@@ -628,10 +629,8 @@
   .vision::before {
     content: '';
     position: absolute;
-    bottom: -200px; right: -200px;
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(184,150,90,.06) 0%, transparent 70%);
+    inset: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(184,150,90,.08) 0%, transparent 60%);
     pointer-events: none;
   }
   .vision-inner {
@@ -987,134 +986,11 @@
 </section>
 
 
-<!-- PACKAGES -->
-<section class="packages" id="packages">
-  <div class="packages-header reveal">
-    <div>
-      <div class="lbl">How we work with you</div>
-      <h2>Three ways to<br>work with <em>Solfood.</em></h2>
-    </div>
-    <p>Each engagement combines our three core competencies — R&D & food intelligence, food law & certification, marketing & strategy. You don't hire a consultant. You activate a full team.</p>
-  </div>
 
-  <div class="pkg-grid">
 
-    <!-- 01 MARKET ENTRY -->
-    <div class="pkg reveal d1">
-      <div class="pkg-num">01</div>
-      <div class="pkg-name">Market Entry</div>
-      <div class="pkg-tagline">"We enter the market with you — from research to compliance, to the narrative that sells."</div>
-      <div class="pkg-for">Designed for</div>
-      <div class="pkg-target">Agri-food companies with a strong product and weak international positioning. Targeting Germany, France, UK, USA, the Netherlands or Gulf markets.</div>
-      <div class="pkg-includes">
-        <div class="pkg-item">
-          <div class="pkg-item-label">R&D &amp; Intelligence</div>
-          <div class="pkg-item-desc">Market analysis, competitor mapping, consumer sentiment, category trends and positioning opportunities in the target market.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Food Law &amp; Compliance</div>
-          <div class="pkg-item-desc">Label review for target market, local regulatory requirements, distributor contracts, consumer data &amp; GDPR compliance.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Brand &amp; Narrative</div>
-          <div class="pkg-item-desc">Product positioning, narrative for international buyers, packaging and label adaptation, pitch deck for trade fairs and distributors.</div>
-        </div>
-      </div>
-      <div class="pkg-footer">
-        <div>
-          <div class="pkg-meta-label">Duration</div>
-          <div class="pkg-meta-value">5 weeks</div>
-        </div>
-        <div>
-          <div class="pkg-meta-label">Investment</div>
-          <div class="pkg-meta-value">€6,500</div>
-        </div>
-        <div class="pkg-deliverable">
-          <div class="pkg-meta-label">Deliverable</div>
-          <div class="pkg-deliverable-text">25–30 page strategy document · Label review · Pitch deck</div>
-        </div>
-        <a href="#contact" class="pkg-cta">Start a conversation →</a>
-      </div>
-    </div>
 
-    <!-- 02 TERRITORY -->
-    <div class="pkg reveal d2">
-      <div class="pkg-num">02</div>
-      <div class="pkg-name">Territory</div>
-      <div class="pkg-tagline">"We turn your territory's food into a strategy — not a village fair."</div>
-      <div class="pkg-for">Designed for</div>
-      <div class="pkg-target">Municipalities, development agencies, food districts and producer consortia with a food heritage that isn't yet competitive or fundable at European level.</div>
-      <div class="pkg-includes">
-        <div class="pkg-item">
-          <div class="pkg-item-label">R&D &amp; Intelligence</div>
-          <div class="pkg-item-desc">Historical-territorial analysis of typical products, supply chain mapping, IGP/DOP/De.Co. research, European benchmarking.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Food Law &amp; Certification</div>
-          <div class="pkg-item-desc">IGP/DOP/STG or De.Co. certification pathway, disciplinary verification, labelling and denomination consulting, legal protection of food heritage.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Territorial Branding</div>
-          <div class="pkg-item-desc">Brand strategy, institutional and tourism narrative, valorisation plan inspired by models like Limoncello di Sorrento or Prosecco.</div>
-        </div>
-      </div>
-      <div class="pkg-footer">
-        <div>
-          <div class="pkg-meta-label">Duration</div>
-          <div class="pkg-meta-value">6 weeks</div>
-        </div>
-        <div>
-          <div class="pkg-meta-label">Investment</div>
-          <div class="pkg-meta-value">€8,000</div>
-        </div>
-        <div class="pkg-deliverable">
-          <div class="pkg-meta-label">Deliverable</div>
-          <div class="pkg-deliverable-text">Territorial report · Certification dossier · Brand strategy document</div>
-        </div>
-        <a href="#contact" class="pkg-cta">Start a conversation →</a>
-      </div>
-    </div>
 
-    <!-- 03 INTELLIGENCE -->
-    <div class="pkg reveal d3">
-      <div class="pkg-num">03</div>
-      <div class="pkg-name">Intelligence</div>
-      <div class="pkg-tagline">"We tell you where food is going before it becomes obvious to everyone."</div>
-      <div class="pkg-for">Designed for</div>
-      <div class="pkg-target">Foundations, investment funds, corporate sustainability divisions and consulting firms that need senior food expertise on a specific project or market question.</div>
-      <div class="pkg-includes">
-        <div class="pkg-item">
-          <div class="pkg-item-label">R&D &amp; Data</div>
-          <div class="pkg-item-desc">Food market intelligence on a specific theme or market, trend analysis, consumer sentiment mapping, key actor mapping, international benchmarking.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Food Policy &amp; Law</div>
-          <div class="pkg-item-desc">European and local regulatory landscape, policy implications of identified trends, consumer data &amp; privacy in food, policy recommendations.</div>
-        </div>
-        <div class="pkg-item">
-          <div class="pkg-item-label">Strategic Narrative</div>
-          <div class="pkg-item-desc">Executive synthesis for decision makers, applicable strategic framework, boardroom-ready presentation of findings.</div>
-        </div>
-      </div>
-      <div class="pkg-footer">
-        <div>
-          <div class="pkg-meta-label">Duration</div>
-          <div class="pkg-meta-value">4–6 weeks</div>
-        </div>
-        <div>
-          <div class="pkg-meta-label">Investment</div>
-          <div class="pkg-meta-value">€9,500</div>
-        </div>
-        <div class="pkg-deliverable">
-          <div class="pkg-meta-label">Deliverable</div>
-          <div class="pkg-deliverable-text">Intelligence report 30–40 pages · 3-page executive summary · Presentation deck</div>
-        </div>
-        <a href="#contact" class="pkg-cta">Start a conversation →</a>
-      </div>
-    </div>
 
-  </div>
-</section>
 
 <!-- VISION -->
 <section class="vision">
@@ -1280,6 +1156,125 @@
   </div>
   </div>
 </section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <div class="packages-header reveal">
+    <div>
+      <div class="lbl">How we work with you</div>
+      <h2>Three ways to<br>work with <em>Solfood.</em></h2>
+    </div>
+    <p>Each engagement combines our three core competencies — R&D & food intelligence, food law & certification, marketing & strategy. You don't hire a consultant. You activate a full team.</p>
+  </div>
+
+  <div class="pkg-grid">
+
+    <!-- 01 MARKET ENTRY -->
+    <div class="pkg reveal d1">
+      <div class="pkg-num">01</div>
+      <div class="pkg-name">Market Entry</div>
+      <div class="pkg-tagline">"We enter the market with you — from research to compliance, to the narrative that sells."</div>
+      <div class="pkg-for">Designed for</div>
+      <div class="pkg-target">Agri-food companies with a strong product and weak international positioning. Targeting Germany, France, UK, USA, the Netherlands or Gulf markets.</div>
+      <div class="pkg-includes">
+        <div class="pkg-item">
+          <div class="pkg-item-label">R&D &amp; Intelligence</div>
+          <div class="pkg-item-desc">Market analysis, competitor mapping, consumer sentiment, category trends and positioning opportunities in the target market.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Food Law &amp; Compliance</div>
+          <div class="pkg-item-desc">Label review for target market, local regulatory requirements, distributor contracts, consumer data &amp; GDPR compliance.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Brand &amp; Narrative</div>
+          <div class="pkg-item-desc">Product positioning, narrative for international buyers, packaging and label adaptation, pitch deck for trade fairs and distributors.</div>
+        </div>
+      </div>
+      <div class="pkg-footer">
+        <div>
+          <div class="pkg-meta-label">Duration</div>
+          <div class="pkg-meta-value">5 weeks</div>
+        </div>
+        <div class="pkg-deliverable">
+          <div class="pkg-meta-label">Deliverable</div>
+          <div class="pkg-deliverable-text">25–30 page strategy document · Label review · Pitch deck</div>
+        </div>
+        <a href="#contact" class="pkg-cta">Start a conversation →</a>
+      </div>
+    </div>
+
+    <!-- 02 TERRITORY -->
+    <div class="pkg reveal d2">
+      <div class="pkg-num">02</div>
+      <div class="pkg-name">Territory</div>
+      <div class="pkg-tagline">"We turn your territory's food into a strategy — not a village fair."</div>
+      <div class="pkg-for">Designed for</div>
+      <div class="pkg-target">Municipalities, development agencies, food districts and producer consortia with a food heritage that isn't yet competitive or fundable at European level.</div>
+      <div class="pkg-includes">
+        <div class="pkg-item">
+          <div class="pkg-item-label">R&D &amp; Intelligence</div>
+          <div class="pkg-item-desc">Historical-territorial analysis of typical products, supply chain mapping, IGP/DOP/De.Co. research, European benchmarking.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Food Law &amp; Certification</div>
+          <div class="pkg-item-desc">IGP/DOP/STG or De.Co. certification pathway, disciplinary verification, labelling and denomination consulting, legal protection of food heritage.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Territorial Branding</div>
+          <div class="pkg-item-desc">Brand strategy, institutional and tourism narrative, valorisation plan inspired by models like Limoncello di Sorrento or Prosecco.</div>
+        </div>
+      </div>
+      <div class="pkg-footer">
+        <div>
+          <div class="pkg-meta-label">Duration</div>
+          <div class="pkg-meta-value">6 weeks</div>
+        </div>
+        <div class="pkg-deliverable">
+          <div class="pkg-meta-label">Deliverable</div>
+          <div class="pkg-deliverable-text">Territorial report · Certification dossier · Brand strategy document</div>
+        </div>
+        <a href="#contact" class="pkg-cta">Start a conversation →</a>
+      </div>
+    </div>
+
+    <!-- 03 INTELLIGENCE -->
+    <div class="pkg reveal d3">
+      <div class="pkg-num">03</div>
+      <div class="pkg-name">Intelligence</div>
+      <div class="pkg-tagline">"We tell you where food is going before it becomes obvious to everyone."</div>
+      <div class="pkg-for">Designed for</div>
+      <div class="pkg-target">Foundations, investment funds, corporate sustainability divisions and consulting firms that need senior food expertise on a specific project or market question.</div>
+      <div class="pkg-includes">
+        <div class="pkg-item">
+          <div class="pkg-item-label">R&D &amp; Data</div>
+          <div class="pkg-item-desc">Food market intelligence on a specific theme or market, trend analysis, consumer sentiment mapping, key actor mapping, international benchmarking.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Food Policy &amp; Law</div>
+          <div class="pkg-item-desc">European and local regulatory landscape, policy implications of identified trends, consumer data &amp; privacy in food, policy recommendations.</div>
+        </div>
+        <div class="pkg-item">
+          <div class="pkg-item-label">Strategic Narrative</div>
+          <div class="pkg-item-desc">Executive synthesis for decision makers, applicable strategic framework, boardroom-ready presentation of findings.</div>
+        </div>
+      </div>
+      <div class="pkg-footer">
+        <div>
+          <div class="pkg-meta-label">Duration</div>
+          <div class="pkg-meta-value">4–6 weeks</div>
+        </div>
+        <div class="pkg-deliverable">
+          <div class="pkg-meta-label">Deliverable</div>
+          <div class="pkg-deliverable-text">Intelligence report 30–40 pages · 3-page executive summary · Presentation deck</div>
+        </div>
+        <a href="#contact" class="pkg-cta">Start a conversation →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
 
 <!-- HOW WE WORK -->
 <section class="hww" id="method">
