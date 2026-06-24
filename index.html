@@ -499,7 +499,211 @@
     .portfolio-grid { grid-template-columns: repeat(2,1fr); }
   }
 
+  /* PUGLIA TERRITORIAL ADVISORY */
+  .puglia-advisory {
+    padding: 130px 60px;
+    background: var(--cream);
+  }
 
+  .puglia-advisory-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .puglia-advisory-image {
+    position: relative;
+    min-height: 610px;
+    overflow: hidden;
+    background: var(--soil);
+  }
+
+  .puglia-advisory-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 610px;
+    display: block;
+    object-fit: cover;
+    filter: brightness(.78) saturate(.85);
+    transition: transform .6s ease;
+  }
+
+  .puglia-advisory-image:hover img {
+    transform: scale(1.025);
+  }
+
+  .puglia-advisory-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(26,23,18,.78) 0%,
+      rgba(26,23,18,.08) 55%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .puglia-advisory-caption {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    bottom: 28px;
+    z-index: 2;
+  }
+
+  .puglia-advisory-caption span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .puglia-advisory-caption strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--wheat);
+  }
+
+  .puglia-advisory-content .lbl {
+    color: var(--terracotta);
+  }
+
+  .puglia-advisory-content h2 {
+    margin-bottom: 25px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 58px);
+    font-weight: 400;
+    line-height: 1.08;
+    color: var(--soil);
+  }
+
+  .puglia-advisory-content h2 em {
+    color: var(--terracotta);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .puglia-advisory-intro {
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-intro strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .puglia-advisory-text {
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .puglia-advisory-item {
+    padding: 23px 21px;
+    border: 1px solid rgba(158,148,133,.16);
+    background: rgba(250,248,244,.6);
+    transition: border-color .3s, background .3s;
+  }
+
+  .puglia-advisory-item:hover {
+    border-color: var(--terracotta);
+    background: var(--white);
+  }
+
+  .puglia-advisory-item span {
+    display: block;
+    margin-bottom: 9px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--terracotta);
+  }
+
+  .puglia-advisory-item h3 {
+    margin-bottom: 7px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--soil);
+  }
+
+  .puglia-advisory-item p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-cta {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 30px;
+    background: var(--terracotta);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background .3s, transform .3s;
+  }
+
+  .puglia-advisory-cta:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .puglia-advisory-note {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(158,148,133,.17);
+    font-size: 11px;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+
+  @media(max-width:960px) {
+    .puglia-advisory {
+      padding: 80px 24px;
+    }
+
+    .puglia-advisory-inner {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+
+    .puglia-advisory-image,
+    .puglia-advisory-image img {
+      min-height: 500px;
+    }
+  }
+
+  @media(max-width:600px) {
+    .puglia-advisory-list {
+      grid-template-columns: 1fr;
+    }
+
+    .puglia-advisory-image,
+    .puglia-advisory-image img {
+      min-height: 420px;
+    }
+  }
   /* HOW WE WORK */
   .hww {
     background: var(--soil);
@@ -1121,7 +1325,86 @@
     </div>
   </div>
 </section>
+<!-- PUGLIA TERRITORIAL ADVISORY -->
+<section class="puglia-advisory" id="puglia-advisory">
+  <div class="puglia-advisory-inner">
 
+    <div class="puglia-advisory-image r">
+      <img
+        src="puglia-advisory.jpg"
+        alt="Puglia landscape and territorial advisory"
+        loading="lazy"
+      >
+
+      <div class="puglia-advisory-caption">
+        <span>Regional expertise</span>
+        <strong>Puglia, interpreted from within.</strong>
+      </div>
+    </div>
+
+    <div class="puglia-advisory-content r d2">
+      <div class="lbl">Puglia Territorial Advisory</div>
+
+      <h2>
+        Local intelligence for<br>
+        international projects in <em>Puglia.</em>
+      </h2>
+
+      <p class="puglia-advisory-intro">
+        <strong>casogeographics provides independent territorial intelligence to international professionals, organisations and private clients seeking to understand, evaluate or develop activities in Puglia.</strong>
+      </p>
+
+      <p class="puglia-advisory-text">
+        Puglia is not a single, uniform destination. Its cities, coastal areas, rural landscapes, productive districts and inland communities offer different identities, conditions and opportunities. We help clients understand these differences, compare locations, identify relevant local actors and approach the region with reliable, place-based knowledge.
+      </p>
+
+      <div class="puglia-advisory-list">
+
+        <div class="puglia-advisory-item">
+          <span>01</span>
+          <h3>Area and Location Intelligence</h3>
+          <p>
+            Comparative analysis of different areas of Puglia according to the objectives, priorities and practical needs of each client.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>02</span>
+          <h3>Local Ecosystem Mapping</h3>
+          <p>
+            Identification of institutions, businesses, producers, professionals, service providers and potential local partners.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>03</span>
+          <h3>On-site Territorial Research</h3>
+          <p>
+            Field visits, preliminary reconnaissance, local meetings and direct analysis of the geographical, social and productive context.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>04</span>
+          <h3>Food and Cultural Orientation</h3>
+          <p>
+            Interpretation of local food cultures, traditions, seasonal practices and community dynamics across the region.
+          </p>
+        </div>
+
+      </div>
+
+      <a href="#contact" class="puglia-advisory-cta">
+        Discuss a Puglia brief →
+      </a>
+
+      <p class="puglia-advisory-note">
+        Our role is territorial and strategic. We do not operate as a real estate agency, travel agency, legal advisor or tax advisor.
+      </p>
+    </div>
+
+  </div>
+</section>
 <!-- HOW WE WORK -->
 <section class="hww" id="method">
   <div class="hww-header reveal">
