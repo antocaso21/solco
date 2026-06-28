@@ -1,0 +1,2605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>casogeographics — A Territorial Intelligence Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1712;
+    --soil: #2c2416;
+    --terracotta: #c4622d;
+    --wheat: #e8dcc8;
+    --cream: #f5f0e8;
+    --gold: #b8965a;
+    --stone: #9e9485;
+    --white: #faf8f4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--white); color:var(--ink); font-family:'DM Sans',sans-serif; font-weight:400; overflow-x:hidden; }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:999; opacity:0.35;
+  }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:28px 60px; transition:background .4s, padding .4s; }
+  nav.s { background:rgba(245,240,232,.96); backdrop-filter:blur(12px); padding:15px 60px; border-bottom:1px solid rgba(184,150,90,.2); }
+  .logo { display:flex; align-items:center; text-decoration:none; }
+  .logo img { display:block; width:auto; height:54px; object-fit:contain; transition:height .4s; }
+  nav.s .logo img { height:42px; }
+  .nav-links { display:flex; gap:38px; list-style:none; }
+  .nav-links a { font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:rgba(245,240,232,.75); text-decoration:none; transition:color .3s; }
+  nav.s .nav-links a { color:var(--stone); }
+  .nav-links a:hover { color:var(--terracotta)!important; }
+  .nav-cta { border:1px solid rgba(245,240,232,.4); padding:9px 22px; color:var(--white)!important; }
+  nav.s .nav-cta { border-color:var(--ink); color:var(--ink)!important; }
+  .nav-cta:hover { background:var(--terracotta)!important; border-color:var(--terracotta)!important; color:var(--white)!important; }
+  .burger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .burger span { display:block; width:24px; height:1.5px; background:var(--white); transition:background .3s; }
+  nav.s .burger span { background:var(--ink); }
+  .mob-menu { display:none; position:fixed; inset:0; background:var(--soil); z-index:190; flex-direction:column; align-items:center; justify-content:center; gap:40px; }
+  .mob-menu.open { display:flex; }
+  .mob-menu a { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:300; color:var(--wheat); text-decoration:none; letter-spacing:.06em; transition:color .3s; }
+  .mob-menu a:hover { color:var(--terracotta); }
+  .mob-close { position:absolute; top:26px; right:26px; font-size:26px; color:var(--wheat); cursor:pointer; background:none; border:none; }
+
+  /* HERO */
+  .hero { position:relative; height:100vh; min-height:660px; display:flex; flex-direction:column; justify-content:flex-end; padding:0 60px 80px; overflow:hidden; }
+  .hero-bg {
+    position:absolute; inset:0;
+    background: linear-gradient(to bottom, rgba(26,23,18,.25) 0%, rgba(26,23,18,.78) 100%),
+      url('https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=1800&q=80') center/cover no-repeat;
+    animation:hzoom 22s ease-in-out infinite alternate;
+  }
+  @keyframes hzoom { from{transform:scale(1.06)} to{transform:scale(1.0)} }
+  .eyebrow { position:relative; font-size:10px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; display:flex; align-items:center; gap:14px; animation:fup 1s ease .3s both; }
+  .eyebrow::before { content:''; width:34px; height:1px; background:var(--gold); }
+  .hero h1 { position:relative; font-family:'Cormorant Garamond',serif; font-size:clamp(50px,9vw,112px); font-weight:300; line-height:.92; color:var(--white); letter-spacing:-.02em; animation:fup 1s ease .5s both; }
+  .hero h1 em { font-style:italic; color:var(--wheat); }
+  .hero-bot { position:relative; margin-top:36px; display:flex; align-items:flex-end; justify-content:space-between; animation:fup 1s ease .7s both; }
+  .hero-desc { font-size:15px; color:rgba(245,240,232,.62); max-width:360px; line-height:1.75; }
+  .hero-scroll { display:flex; flex-direction:column; align-items:center; gap:10px; color:rgba(245,240,232,.38); font-size:9px; letter-spacing:.28em; text-transform:uppercase; }
+  .scroll-line { width:1px; height:54px; background:linear-gradient(to bottom,rgba(245,240,232,.42),transparent); animation:sp 2.2s ease-in-out infinite; }
+  @keyframes sp { 0%,100%{opacity:.5;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(.62)} }
+  @keyframes fup { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MANIFESTO */
+  .manifesto { padding:130px 60px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+  .lbl { font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--terracotta); margin-bottom:22px; font-weight:500; }
+  .manifesto h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4vw,54px); font-weight:300; line-height:1.12; color:var(--soil); }
+  .manifesto h2 em { font-style:italic; color:var(--terracotta); }
+  .manifesto p { font-size:15px; line-height:1.88; color:var(--stone); margin-bottom:22px; }
+  .manifesto p strong { color:var(--ink); font-weight:500; }
+  .stats { display:grid; grid-template-columns:repeat(6,1fr); gap:0; margin-top:64px; padding-top:48px; border-top:1px solid rgba(158,148,133,.2); }
+  .snum { font-family:'Cormorant Garamond',serif; font-size:50px; font-weight:300; color:var(--terracotta); line-height:1; }
+  .slbl { font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--stone); margin-top:6px; }
+
+  /* SERVICES */
+  .services { background:var(--soil); padding:130px 60px; position:relative; overflow:hidden; }
+  .services::after { content:'casogeographics'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Cormorant Garamond',serif; font-size:280px; font-weight:600; color:rgba(255,255,255,.017); pointer-events:none; white-space:nowrap; letter-spacing:.1em; }
+  .svc-header { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:end; margin-bottom:60px; }
+  .services .lbl { color:var(--gold); }
+  .services h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,5vw,62px); font-weight:300; color:var(--wheat); line-height:1.08; }
+  .svc-intro { font-size:14px; color:rgba(232,220,200,.42); line-height:1.85; align-self:end; }
+  .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; position:relative; z-index:1; }
+  .svc-card { background:rgba(255,255,255,.028); border:1px solid rgba(232,220,200,.07); overflow:hidden; transition:border-color .4s, transform .4s; position:relative; }
+  .svc-card:hover { border-color:rgba(196,98,45,.4); transform:translateY(-5px); z-index:2; }
+  .svc-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--terracotta); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .svc-card:hover::after { transform:scaleX(1); }
+  .svc-img { width:100%; height:155px; object-fit:cover; display:block; filter:brightness(.55) saturate(.65); transition:filter .5s; }
+  .svc-card:hover .svc-img { filter:brightness(.72) saturate(.88); }
+  .svc-body { padding:26px 22px 30px; }
+  .svc-n { font-family:'Cormorant Garamond',serif; font-size:12px; color:var(--terracotta); opacity:.65; display:block; margin-bottom:10px; }
+  .svc-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:400; color:var(--wheat); line-height:1.25; margin-bottom:10px; }
+  .svc-desc { font-size:12px; color:rgba(232,220,200,.36); line-height:1.8; }
+
+  .svc-outputs {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: .65;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(184,150,90,.15);
+    line-height: 1.8;
+  }
+  .svc-card:hover .svc-outputs { opacity: 1; }
+  .svc-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 16px;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .svc-link:hover { color: var(--gold); }
+
+
+  .svc-outputs {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: .6;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(184,150,90,.15);
+    line-height: 1.9;
+  }
+  .svc-card:hover .svc-outputs { opacity: 1; }
+
+  .eu-bar { margin-top:34px; border:1px solid rgba(184,150,90,.2); padding:26px 38px; display:flex; align-items:center; gap:34px; background:rgba(184,150,90,.04); position:relative; z-index:1; }
+  .eu-flag { flex-shrink:0; display:flex; align-items:center; }
+  .eu-txt h4 { font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--gold); margin-bottom:5px; }
+  .eu-txt p { font-size:13px; color:rgba(232,220,200,.42); line-height:1.7; }
+  .eu-pill { margin-left:auto; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(184,150,90,.4); padding:7px 16px; white-space:nowrap; flex-shrink:0; }
+
+  /* VISUAL BREAK */
+  .vbreak { height:66vh; position:relative; overflow:hidden; display:flex; align-items:center; }
+  .vbreak-bg { position:absolute; inset:0; background: linear-gradient(to right,rgba(26,23,18,.88) 44%,rgba(26,23,18,.28) 100%), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1800&q=80') center/cover no-repeat; }
+  .vbreak-cnt { position:relative; padding:0 60px; max-width:680px; }
+  .vbreak-cnt blockquote { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,4vw,46px); font-weight:300; font-style:italic; color:var(--wheat); line-height:1.32; margin-bottom:26px; }
+  .vbreak-cnt cite { font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); font-style:normal; display:flex; align-items:center; gap:14px; }
+  .vbreak-cnt cite::before { content:''; width:26px; height:1px; background:var(--gold); }
+
+  /* ECOSYSTEM */
+  .eco {
+    padding:130px 60px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:90px;
+    align-items:center;
+    background:
+      linear-gradient(rgba(250,248,244,.82), rgba(250,248,244,.82)),
+      url('terroir-map-bg.png') center/cover no-repeat;
+  }  
+  .eco h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4vw,50px); font-weight:300; color:var(--soil); line-height:1.15; margin-bottom:26px; }
+  .eco > div > p { font-size:15px; color:var(--stone); line-height:1.85; margin-bottom:18px; }
+  .eco-cards { display:flex; flex-direction:column; gap:13px; }
+  .eco-card { border:1px solid rgba(158,148,133,.17); padding:26px; display:flex; gap:22px; align-items:flex-start; transition:border-color .3s, background .3s; }
+  .eco-card:hover { border-color:var(--terracotta); background:rgba(196,98,45,.025); }
+  .eco-img { width:50px; height:50px; object-fit:cover; flex-shrink:0; filter:grayscale(28%); }
+
+  .eco-logo-cultum { width:80px !important; height:44px !important; }
+  .cultum-logo-img { width:80px; height:44px; object-fit:contain; display:block; }
+  .eco-logo-wrap { width:52px; height:52px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .eco-img-cultum { width:80px; height:44px; object-fit:contain; flex-shrink:0; filter:grayscale(20%) brightness(1.1); background:transparent; }
+
+  .eco-lbl { font-size:9px; letter-spacing:.24em; text-transform:uppercase; color:var(--terracotta); margin-bottom:3px; }
+  .eco-card h4 { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--soil); margin-bottom:5px; }
+  .eco-card p { font-size:13px; color:var(--stone); line-height:1.7; }
+
+  /* CLIENTS */
+  .clients { padding:100px 60px; background:var(--cream); text-align:center; }
+  .clients .lbl { color:var(--terracotta); margin-bottom:42px; }
+  .cli-row { display:flex; justify-content:center; align-items:center; gap:44px; flex-wrap:wrap; }
+  .cli-item { font-family:'Cormorant Garamond',serif; font-size:19px; color:rgba(44,36,22,.65); letter-spacing:.06em; transition:color .3s; cursor:default; font-weight:400; }
+  .cli-item:hover { color:var(--soil); }
+  .cli-dot { color:rgba(196,98,45,.35); font-size:14px; }
+
+  /* CONTACT */
+  .contact { background:var(--ink); padding:130px 60px; display:grid; grid-template-columns:1fr 1fr; gap:90px; align-items:start; position:relative; overflow:hidden; }
+  .contact::before { content:''; position:absolute; top:-180px; right:-180px; width:540px; height:540px; border-radius:50%; background:radial-gradient(circle,rgba(196,98,45,.07) 0%,transparent 70%); pointer-events:none; }
+  .contact .lbl { color:var(--terracotta); }
+  .contact h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,5vw,60px); font-weight:300; color:var(--wheat); line-height:1.1; margin-bottom:18px; }
+  .contact > div > p { font-size:15px; color:rgba(232,220,200,.42); line-height:1.8; }
+  .cf { display:flex; flex-direction:column; gap:17px; }
+  .frow { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+  .ff { display:flex; flex-direction:column; gap:6px; }
+  .ff label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:rgba(232,220,200,.32); }
+  .ff input,.ff select,.ff textarea { background:rgba(255,255,255,.04); border:1px solid rgba(232,220,200,.1); padding:14px 17px; color:var(--wheat); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:300; outline:none; transition:border-color .3s; -webkit-appearance:none; }
+  .ff input::placeholder,.ff textarea::placeholder { color:rgba(232,220,200,.2); }
+  .ff input:focus,.ff select:focus,.ff textarea:focus { border-color:var(--terracotta); }
+  .ff textarea { resize:vertical; min-height:108px; }
+  .ff select { color:rgba(232,220,200,.42); cursor:pointer; }
+  .ff select option { background:var(--ink); color:var(--wheat); }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(232,220,200,.08);
+  }
+  .contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-decoration: none;
+    transition: opacity .3s;
+  }
+  .contact-detail:hover { opacity: .75; }
+  .cd-label {
+    font-size: 9px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+  .cd-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--wheat);
+    letter-spacing: .02em;
+  }
+
+  .btn-s { background:var(--terracotta); color:var(--white); border:none; padding:16px 42px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; transition:background .3s,transform .3s; align-self:flex-start; }
+  .btn-s:hover { background:var(--gold); transform:translateY(-2px); }
+
+  /* FOOTER */
+  footer { background:var(--soil); padding:50px 60px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(232,220,200,.05); }
+  .f-logo img { display:block; width:auto; height:76px; object-fit:contain; }
+  .f-payoff { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:rgba(232,220,200,.26); margin-top:5px; }
+  .f-links { display:flex; gap:30px; list-style:none; }
+  .f-links a { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(232,220,200,.28); text-decoration:none; transition:color .3s; }
+  .f-links a:hover { color:var(--terracotta); }
+
+  .f-contacts { display:flex; flex-direction:column; gap:4px; margin-top:8px; }
+  .f-contact { font-size:12px; color:rgba(232,220,200,.35); text-decoration:none; transition:color .3s; }
+  .f-contact:hover { color:var(--terracotta); }
+
+  .f-bar { background:var(--ink); padding:17px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .f-bar p { font-size:11px; color:rgba(232,220,200,.17); }
+  .f-eco { display:flex; gap:22px; }
+  .f-eco span { font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:rgba(232,220,200,.17); }
+  .f-eco span b { color:var(--terracotta); font-weight:400; }
+
+
+  .tc-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196,98,45,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .tc-linkedin:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .partner-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 16px;
+    border: 1px solid rgba(158,148,133,.15);
+    text-decoration: none;
+    transition: border-color .3s, background .3s;
+    text-align: center;
+  }
+  .partner-item:hover {
+    border-color: var(--terracotta);
+    background: rgba(196,98,45,.03);
+  }
+  .partner-favicon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: grayscale(40%);
+    opacity: 0.75;
+    transition: filter .3s, opacity .3s;
+  }
+  .partner-item:hover .partner-favicon {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+  .partner-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(158,148,133,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--stone);
+  }
+  .partner-name {
+    font-size: 11px;
+    letter-spacing: .06em;
+    color: var(--stone);
+    line-height: 1.4;
+    transition: color .3s;
+  }
+  .partner-item:hover .partner-name { color: var(--soil); }
+  @media(max-width:960px) {
+    .partner-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media(max-width:600px) {
+    .partner-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+
+
+  .portfolio-countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 56px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(158,148,133,.15);
+    border-bottom: 1px solid rgba(158,148,133,.15);
+  }
+  .pcountry {
+    font-size: 12px;
+    color: var(--stone);
+    letter-spacing: .04em;
+  }
+  .pcard-countries {
+    font-size: 18px;
+    letter-spacing: .06em;
+    margin-top: -4px;
+  }
+
+  /* PORTFOLIO */
+  .portfolio {
+    padding: 130px 60px;
+    background: var(--white);
+  }
+  .portfolio-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 72px;
+  }
+  .portfolio-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 60px);
+    font-weight: 300;
+    color: var(--soil);
+    line-height: 1.1;
+  }
+  .portfolio-header h2 em { font-style: italic; color: var(--terracotta); }
+  .portfolio-intro {
+    font-size: 15px;
+    color: var(--stone);
+    line-height: 1.8;
+    align-self: end;
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .pcard {
+    background: var(--cream);
+    border: 1px solid rgba(158,148,133,.12);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color .3s, background .3s, transform .3s;
+    position: relative;
+  }
+  .pcard:hover {
+    border-color: var(--terracotta);
+    background: var(--white);
+    transform: translateY(-3px);
+    z-index: 2;
+  }
+  .pcard-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pcard-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ptag {
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 0;
+  }
+  .ptag-eu { background: rgba(0,51,153,.08); color: #003399; }
+  .ptag-green { background: rgba(122,140,110,.12); color: var(--sage); }
+  .ptag-terr { background: rgba(196,98,45,.1); color: var(--terracotta); }
+  .pcard-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: rgba(158,148,133,.35);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .pcard-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--soil);
+    line-height: 1.2;
+  }
+  .pcard-title em { font-style: italic; color: var(--stone); font-size: 18px; }
+  .pcard-desc {
+    font-size: 13px;
+    color: var(--stone);
+    line-height: 1.8;
+    flex: 1;
+  }
+  .pcard-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pmeta-item {
+    font-size: 11px;
+    color: var(--stone);
+    opacity: .7;
+  }
+  .pcard-services {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    padding-top: 12px;
+    border-top: 1px solid rgba(158,148,133,.15);
+  }
+
+  .portfolio-tier { margin-bottom: 32px; }
+  .ptier-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--stone);
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(158,148,133,.15);
+  }
+  .ptier-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .ptier-dot--done { background: var(--sage); }
+  .ptier-dot--progress { background: var(--gold); }
+  .ptier-dot--design { background: rgba(158,148,133,.4); }
+  .pcard--muted { opacity: .85; }
+  .pcard--muted .pcard-year { opacity: .5; }
+  .pcard--design {
+    background: rgba(158,148,133,.05);
+    border-color: rgba(158,148,133,.08);
+  }
+  .pcard--design .pcard-title { color: var(--stone); }
+  .pcard--design .pcard-year { color: rgba(158,148,133,.25); }
+  .pcard--design:hover { opacity: 1; }
+
+  .pcard-link {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: color .3s;
+    margin-top: 4px;
+  }
+  .pcard-link:hover { color: var(--gold); }
+  @media(max-width:960px) {
+    .portfolio { padding: 80px 24px; }
+    .portfolio-header { grid-template-columns: 1fr; gap: 24px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+  }
+  @media(min-width:600px) and (max-width:960px) {
+    .portfolio-grid { grid-template-columns: repeat(2,1fr); }
+  }
+
+  /* FOOD INTELLIGENCE */
+  .food-intelligence {
+    padding: 130px 60px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .food-intelligence::before {
+    content: '';
+    position: absolute;
+    top: -180px;
+    right: -180px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,98,45,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .fi-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: end;
+    margin-bottom: 64px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fi-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 300;
+    line-height: 1.06;
+    color: var(--soil);
+  }
+
+  .fi-header h2 em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+
+  .fi-intro {
+    font-size: 15px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+
+  .fi-intro strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .fi-feature {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    min-height: 490px;
+    margin-bottom: 2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fi-image {
+    position: relative;
+    overflow: hidden;
+    background: var(--soil);
+  }
+
+  .fi-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 490px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(.68) saturate(.78);
+    transition: transform .6s ease, filter .6s ease;
+  }
+
+  .fi-image:hover img {
+    transform: scale(1.025);
+    filter: brightness(.76) saturate(.9);
+  }
+
+  .fi-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,23,18,.86) 0%, rgba(26,23,18,.06) 65%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .fi-caption {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    bottom: 28px;
+    z-index: 2;
+  }
+
+  .fi-caption span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .fi-caption strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--wheat);
+  }
+
+  .fi-areas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(158,148,133,.1);
+  }
+
+  .fi-area {
+    padding: 30px 28px;
+    background: var(--cream);
+    border: 1px solid rgba(158,148,133,.08);
+    transition: background .3s, border-color .3s, transform .3s;
+  }
+
+  .fi-area:hover {
+    background: var(--white);
+    border-color: var(--terracotta);
+    transform: translateY(-2px);
+    z-index: 2;
+  }
+
+  .fi-area-num {
+    display: block;
+    margin-bottom: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--terracotta);
+  }
+
+  .fi-area h3 {
+    margin-bottom: 9px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--soil);
+  }
+
+  .fi-area p {
+    font-size: 12px;
+    line-height: 1.78;
+    color: var(--stone);
+  }
+
+  .fi-output-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: center;
+    padding: 30px 34px;
+    background: var(--soil);
+    position: relative;
+    z-index: 1;
+  }
+
+  .fi-output-bar p {
+    font-size: 11px;
+    line-height: 1.8;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(232,220,200,.52);
+  }
+
+  .fi-output-bar p strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .fi-cta {
+    display: inline-block;
+    padding: 14px 25px;
+    border: 1px solid rgba(184,150,90,.48);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .19em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .3s, border-color .3s, color .3s;
+  }
+
+  .fi-cta:hover {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: var(--white);
+  }
+
+  @media(max-width:960px) {
+    .food-intelligence { padding: 80px 24px; }
+    .fi-header { grid-template-columns: 1fr; gap: 26px; }
+    .fi-feature { grid-template-columns: 1fr; }
+    .fi-image img { min-height: 430px; }
+    .fi-output-bar { grid-template-columns: 1fr; align-items: start; }
+    .fi-cta { justify-self: start; }
+  }
+
+  @media(max-width:600px) {
+    .fi-areas { grid-template-columns: 1fr; }
+    .fi-image img { min-height: 360px; }
+  }
+
+  /* PUGLIA TERRITORIAL ADVISORY */
+  .puglia-advisory {
+    padding: 130px 60px;
+    background: var(--cream);
+  }
+
+  .puglia-advisory-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .puglia-advisory-image {
+    position: relative;
+    min-height: 610px;
+    overflow: hidden;
+    background: var(--soil);
+  }
+
+  .puglia-advisory-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 610px;
+    display: block;
+    object-fit: cover;
+    filter: brightness(.78) saturate(.85);
+    transition: transform .6s ease;
+  }
+
+  .puglia-advisory-image:hover img {
+    transform: scale(1.025);
+  }
+
+  .puglia-advisory-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(26,23,18,.78) 0%,
+      rgba(26,23,18,.08) 55%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  .puglia-advisory-caption {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    bottom: 28px;
+    z-index: 2;
+  }
+
+  .puglia-advisory-caption span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .puglia-advisory-caption strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--wheat);
+  }
+
+  .puglia-advisory-content .lbl {
+    color: var(--terracotta);
+  }
+
+  .puglia-advisory-content h2 {
+    margin-bottom: 25px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 4.5vw, 58px);
+    font-weight: 400;
+    line-height: 1.08;
+    color: var(--soil);
+  }
+
+  .puglia-advisory-content h2 em {
+    color: var(--terracotta);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .puglia-advisory-intro {
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-intro strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .puglia-advisory-text {
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .puglia-advisory-item {
+    padding: 23px 21px;
+    border: 1px solid rgba(158,148,133,.16);
+    background: rgba(250,248,244,.6);
+    transition: border-color .3s, background .3s;
+  }
+
+  .puglia-advisory-item:hover {
+    border-color: var(--terracotta);
+    background: var(--white);
+  }
+
+  .puglia-advisory-item span {
+    display: block;
+    margin-bottom: 9px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--terracotta);
+  }
+
+  .puglia-advisory-item h3 {
+    margin-bottom: 7px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--soil);
+  }
+
+  .puglia-advisory-item p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--stone);
+  }
+
+  .puglia-advisory-cta {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 30px;
+    background: var(--terracotta);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background .3s, transform .3s;
+  }
+
+  .puglia-advisory-cta:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .puglia-advisory-note {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(158,148,133,.17);
+    font-size: 11px;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+
+  @media(max-width:960px) {
+    .puglia-advisory {
+      padding: 80px 24px;
+    }
+
+    .puglia-advisory-inner {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+
+    .puglia-advisory-image,
+    .puglia-advisory-image img {
+      min-height: 500px;
+    }
+  }
+
+  @media(max-width:600px) {
+    .puglia-advisory-list {
+      grid-template-columns: 1fr;
+    }
+
+    .puglia-advisory-image,
+    .puglia-advisory-image img {
+      min-height: 420px;
+    }
+  }
+  /* HOW WE WORK */
+  .hww {
+    background: var(--soil);
+    padding: 130px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hww::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(184,150,90,.3), transparent);
+  }
+  .hww-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 72px;
+  }
+  .hww .lbl { color: var(--gold); }
+  .hww-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4.5vw, 58px);
+    font-weight: 300;
+    color: var(--wheat);
+    line-height: 1.1;
+  }
+  .hww-header h2 em { font-style: italic; color: var(--gold); }
+  .hww-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .hww-step {
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(232,220,200,.06);
+    padding: 40px 32px;
+    position: relative;
+    transition: background .3s, border-color .3s;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .hww-step:hover {
+    background: rgba(196,98,45,.07);
+    border-color: rgba(196,98,45,.25);
+  }
+  .hww-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--terracotta);
+    opacity: .6;
+    letter-spacing: .2em;
+  }
+  .hww-icon { margin: 4px 0; }
+  .hww-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--wheat);
+    line-height: 1.2;
+  }
+  .hww-desc {
+    font-size: 13px;
+    color: rgba(232,220,200,.45);
+    line-height: 1.8;
+    flex: 1;
+  }
+  .hww-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(232,220,200,.08);
+  }
+  .hww-list li {
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(184,150,90,.6);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hww-list li::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    background: var(--terracotta);
+    flex-shrink: 0;
+  }
+
+  /* MORE CORPORATE TYPOGRAPHY */
+  .manifesto h2 { font-weight: 400; }
+  .tc-name { font-weight: 500; }
+  .pcard-title { font-weight: 500; }
+  .svc-title { font-weight: 500; }
+  .eco-card h4 { font-weight: 500; }
+
+  @media(max-width:960px) {
+    .hww { padding: 80px 24px; }
+    .hww-header { grid-template-columns: 1fr; gap: 24px; }
+    .hww-grid { grid-template-columns: 1fr; }
+  }
+  @media(min-width:600px) and (max-width:960px) {
+    .hww-grid { grid-template-columns: repeat(2,1fr); }
+  }
+
+
+  /* VISION */
+  .vision {
+    background: linear-gradient(to bottom, rgba(26,23,18,.82) 0%, rgba(26,23,18,.88) 100%),
+      url('belief-bg.jpg') center/cover no-repeat fixed;
+    padding: 100px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vision::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(184,150,90,.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .vision-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .vision .lbl { color: var(--gold); justify-content: center; display: flex; }
+  .vision-inner h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 300;
+    color: var(--wheat);
+    line-height: 1.15;
+    margin-bottom: 40px;
+  }
+  .vision-inner h2 em { font-style: italic; color: var(--gold); }
+  .vision-inner p {
+    font-size: 16px;
+    color: rgba(232,220,200,.5);
+    line-height: 1.9;
+    margin-bottom: 20px;
+  }
+  .vision-inner p strong { color: var(--wheat); font-weight: 500; }
+  @media(max-width:960px) {
+    .vision { padding: 80px 24px; }
+  }
+
+
+  .portfolio-also { margin-top: 0; }
+  .portfolio-also-intro {
+    font-size: 14px;
+    color: var(--stone);
+    line-height: 1.8;
+    margin: 20px 0 36px;
+    max-width: 680px;
+  }
+  .also-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .also-card {
+    padding: 24px 28px;
+    background: rgba(158,148,133,.04);
+    border: 1px solid rgba(158,148,133,.1);
+    transition: border-color .3s, background .3s;
+  }
+  .also-card:hover {
+    border-color: rgba(196,98,45,.25);
+    background: rgba(196,98,45,.02);
+  }
+  .also-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--soil);
+    margin-bottom: 6px;
+  }
+  .also-meta {
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+  .also-desc {
+    font-size: 12px;
+    color: var(--stone);
+    line-height: 1.8;
+  }
+  @media(max-width:960px) {
+    .also-grid { grid-template-columns: 1fr; }
+  }
+  @media(min-width:600px) and (max-width:960px) {
+    .also-grid { grid-template-columns: repeat(2,1fr); }
+  }
+
+
+  .manifesto--full { display:block; padding:130px 60px; }
+  .manifesto-top { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; margin-bottom:0; }
+  .manifesto-left h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4vw,54px); font-weight:400; line-height:1.12; color:var(--soil); }
+  .manifesto-left h2 em { font-style:italic; color:var(--terracotta); }
+  .manifesto-right p { font-size:15px; line-height:1.88; color:var(--stone); margin-bottom:22px; }
+  .manifesto-right p strong { color:var(--ink); font-weight:500; }
+  .manifesto--full .stats > div { padding:0 32px 0 0; border-right:1px solid rgba(158,148,133,.12); }
+  .manifesto--full .stats > div:last-child { border-right:none; }
+  .manifesto--full .snum { font-size:42px; }
+  @media(max-width:960px) {
+    .manifesto--full { padding:80px 24px; }
+    .manifesto-top { grid-template-columns:1fr; gap:36px; }
+    .manifesto--full .stats { grid-template-columns:repeat(3,1fr); gap:32px; }
+    .manifesto--full .stats > div { border-right:none; padding:0; }
+  }
+  @media(max-width:480px) {
+    .manifesto--full .stats { grid-template-columns:repeat(2,1fr); }
+  }
+
+
+  .hero-sub {
+    font-size: 13px;
+    letter-spacing: .06em;
+    color: rgba(232,220,200,.55);
+    margin-top: 14px;
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+
+  /* FOUNDER */
+  .founder {
+    background: var(--soil);
+    padding: 130px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .founder::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(184,150,90,.3), transparent);
+  }
+  .founder-inner {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .founder-photo-wrap {
+    position: relative;
+  }
+  .founder-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: brightness(.9) contrast(1.05) saturate(.88);
+  }
+  .founder-photo-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(26,23,18,.85), transparent);
+    padding: 32px 24px 20px;
+  }
+  .founder-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--wheat);
+    letter-spacing: .04em;
+    display: block;
+  }
+  .founder-title-label {
+    font-size: 9px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 4px;
+    display: block;
+  }
+  .founder-content { display: flex; flex-direction: column; gap: 28px; padding-top: 8px; }
+  .founder .lbl { color: var(--gold); }
+  .founder-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3.8vw, 50px);
+    font-weight: 300;
+    color: var(--wheat);
+    line-height: 1.15;
+  }
+  .founder-headline em { font-style: italic; color: var(--gold); }
+  .founder-bio {
+    font-size: 15px;
+    color: rgba(232,220,200,.55);
+    line-height: 1.88;
+  }
+  .founder-bio strong { color: var(--wheat); font-weight: 500; }
+  .founder-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .founder-tag {
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(184,150,90,.7);
+    border: 1px solid rgba(184,150,90,.25);
+    padding: 5px 14px;
+  }
+  .founder-links {
+    display: flex;
+    gap: 24px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(232,220,200,.08);
+  }
+  .founder-link {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .founder-link:hover { color: var(--gold); }
+  @media(max-width:960px) {
+    .founder { padding: 80px 24px; }
+    .founder-inner { grid-template-columns: 1fr; gap: 40px; }
+    .founder-photo-wrap { max-width: 280px; }
+  }
+
+
+  /* PUBLICATIONS ENHANCED */
+  .pub-books {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-bottom: 56px;
+  }
+  .book-card {
+    background: var(--cream);
+    border: 1px solid rgba(158,148,133,.12);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0;
+    transition: border-color .3s, background .3s;
+    overflow: hidden;
+  }
+  .book-card:hover { border-color: var(--terracotta); background: var(--white); }
+  .book-cover {
+    background: var(--soil);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    min-height: 220px;
+  }
+  .book-cover-inner {
+    text-align: center;
+  }
+  .book-cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--wheat);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .book-cover-author {
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: .7;
+  }
+  .book-cover-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: rgba(232,220,200,.15);
+    margin-top: 12px;
+    display: block;
+  }
+  .book-info {
+    padding: 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  .book-type {
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+  .book-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--soil);
+    line-height: 1.25;
+    font-style: italic;
+  }
+  .book-subtitle {
+    font-size: 12px;
+    color: var(--stone);
+    line-height: 1.7;
+  }
+  .book-buy {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: color .3s;
+    align-self: flex-start;
+  }
+  .book-buy:hover { color: var(--gold); }
+  @media(max-width:960px) {
+    .pub-books { grid-template-columns: 1fr; }
+    .book-card { grid-template-columns: 120px 1fr; }
+  }
+
+
+  /* GEO-HISTORICAL POLITICAL INTELLIGENCE */
+  .political-intelligence {
+    padding: 130px 60px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .political-intelligence::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(184,150,90,.35), transparent);
+  }
+  .pi-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: end;
+    margin-bottom: 58px;
+  }
+  .pi-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 300;
+    line-height: 1.06;
+    color: var(--soil);
+  }
+  .pi-header h2 em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+  .pi-intro {
+    font-size: 15px;
+    line-height: 1.88;
+    color: var(--stone);
+  }
+  .pi-intro strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .pi-feature {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 2px;
+    margin-bottom: 34px;
+    background: var(--soil);
+    border: 1px solid rgba(184,150,90,.16);
+  }
+  .pi-feature-copy {
+    padding: 48px 46px;
+  }
+  .pi-feature-label {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 9px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .pi-feature-copy h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.4vw, 45px);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--wheat);
+    margin-bottom: 20px;
+  }
+  .pi-feature-copy p {
+    max-width: 700px;
+    font-size: 14px;
+    line-height: 1.88;
+    color: rgba(232,220,200,.48);
+  }
+  .pi-feature-method {
+    padding: 48px 42px;
+    background: rgba(255,255,255,.025);
+    border-left: 1px solid rgba(232,220,200,.07);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .pi-method-title {
+    margin-bottom: 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--gold);
+  }
+  .pi-method-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+  }
+  .pi-method-list li {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(232,220,200,.48);
+  }
+  .pi-method-list li::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--terracotta);
+    flex-shrink: 0;
+  }
+  .pi-section-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 44px 0 20px;
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+  .pi-section-label::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    background: rgba(158,148,133,.16);
+  }
+  .pi-docs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .pi-doc-card {
+    min-height: 315px;
+    padding: 34px 30px;
+    background: var(--cream);
+    border: 1px solid rgba(158,148,133,.12);
+    display: flex;
+    flex-direction: column;
+    transition: background .3s, border-color .3s, transform .3s;
+  }
+  .pi-doc-card:hover {
+    background: var(--white);
+    border-color: var(--terracotta);
+    transform: translateY(-3px);
+  }
+  .pi-doc-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+  .pi-doc-pages { color: var(--stone); }
+  .pi-doc-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--soil);
+    margin-bottom: 14px;
+  }
+  .pi-doc-card p {
+    font-size: 13px;
+    line-height: 1.78;
+    color: var(--stone);
+    flex: 1;
+  }
+  .pi-doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(158,148,133,.15);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .pi-doc-link:hover { color: var(--gold); }
+  .pi-atlases {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .pi-atlas-card {
+    position: relative;
+    min-height: 275px;
+    padding: 38px 34px;
+    background: var(--soil);
+    border: 1px solid rgba(184,150,90,.14);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: border-color .3s, transform .3s;
+  }
+  .pi-atlas-card::after {
+    content: 'ATLAS';
+    position: absolute;
+    right: -10px;
+    bottom: -34px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 110px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: rgba(255,255,255,.025);
+    pointer-events: none;
+  }
+  .pi-atlas-card:hover {
+    border-color: var(--terracotta);
+    transform: translateY(-3px);
+  }
+  .pi-atlas-tag {
+    margin-bottom: 20px;
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .pi-atlas-card h3 {
+    max-width: 520px;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 1.18;
+    color: var(--wheat);
+  }
+  .pi-atlas-card p {
+    max-width: 560px;
+    font-size: 13px;
+    line-height: 1.78;
+    color: rgba(232,220,200,.43);
+    flex: 1;
+  }
+  .pi-atlas-open {
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+  .pi-note {
+    margin-top: 26px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(158,148,133,.14);
+    font-size: 11px;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+  @media(max-width:960px) {
+    .political-intelligence { padding: 80px 24px; }
+    .pi-header { grid-template-columns: 1fr; gap: 24px; }
+    .pi-feature { grid-template-columns: 1fr; }
+    .pi-feature-method { border-left: 0; border-top: 1px solid rgba(232,220,200,.07); }
+    .pi-docs { grid-template-columns: 1fr; }
+    .pi-atlases { grid-template-columns: 1fr; }
+  }
+
+  /* REVEAL */
+  .r { opacity:0; transform:translateY(34px); transition:opacity .85s ease, transform .85s ease; }
+  .r.v { opacity:1; transform:translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s} .d5{transition-delay:.5s}
+
+  /* MOBILE */
+  @media(max-width:960px){
+    nav{padding:20px 24px}
+    nav.s{padding:13px 24px}
+    .nav-links{display:none}
+    .burger{display:flex}
+    .hero{padding:0 24px 56px}
+    .hero-bot{flex-direction:column;align-items:flex-start;gap:26px}
+    .hero-scroll{display:none}
+    .manifesto{grid-template-columns:1fr;padding:80px 24px;gap:44px}
+    .stats{grid-template-columns:1fr 1fr 1fr}
+    .services{padding:80px 24px}
+    .svc-header{grid-template-columns:1fr;gap:18px}
+    .svc-grid{grid-template-columns:1fr;gap:0}
+    .svc-img{height:200px}
+    .eu-bar{flex-direction:column;align-items:flex-start;gap:14px;padding:22px}
+    .eu-pill{margin-left:0}
+    .team{padding:80px 24px}
+    .team h2{margin-bottom:44px}
+    .team-grid{grid-template-columns:1fr;gap:44px}
+    #pubblicazioni{padding:80px 24px!important}
+    .pub-grid{grid-template-columns:1fr!important}
+    .vbreak-cnt{padding:0 24px}
+    .eco{grid-template-columns:1fr;padding:80px 24px;gap:44px}
+    .clients{padding:60px 24px}
+    .cli-row{gap:24px}
+    .contact{grid-template-columns:1fr;padding:80px 24px;gap:44px}
+    .frow{grid-template-columns:1fr}
+    footer{flex-direction:column;gap:26px;padding:38px 24px;text-align:center}
+    .f-links{flex-wrap:wrap;justify-content:center;gap:18px}
+    .f-bar{flex-direction:column;gap:9px;padding:14px 24px;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="mob-menu" id="mm">
+  <button class="mob-close" id="mc">✕</button>
+  <a href="#services" onclick="cm()">Services</a>
+  <a href="#method" onclick="cm()">Method</a>
+  <a href="#founder" onclick="cm()">Founder</a>
+  <a href="#portfolio" onclick="cm()">Portfolio</a>
+  <a href="#pubblicazioni" onclick="cm()">Publications</a>
+  <a href="#ecosystem" onclick="cm()">Ecosystem</a>
+  <a href="#contact" onclick="cm()">Contact</a>
+</div>
+
+<nav id="nav">
+  <a href="#" class="logo" aria-label="casogeographics"><img src="logo.jpg" alt="casogeographics"></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#pubblicazioni">Publications</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+  </ul>
+  <div class="burger" id="bg"><span></span><span></span><span></span></div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="eyebrow">Territorial Intelligence Studio — </div>
+  <h1>Territorial Intelligence<br><em>for a Changing World.</em></h1>
+  <div class="hero-bot">
+    <p class="hero-desc">We investigate how products, communities, political behaviour and places interact. From food systems and Puglia strategy to geo-historical political intelligence, we turn territorial knowledge into evidence-based action.</p>
+    <div class="hero-scroll"><div class="scroll-line"></div>Scroll</div>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="r">
+    <div class="lbl">Who we are</div>
+    <h2>A furrow is the mark<br>left by land<br><em>that thinks.</em></h2>
+    <div class="stats">
+      <div class="r d1"><div class="snum">7+</div><div class="slbl">Years of experience</div></div>
+      <div class="r d2"><div class="snum">30+</div><div class="slbl">Projects delivered</div></div>
+      <div class="r d3"><div class="snum">18</div><div class="slbl">Countries involved</div></div>
+      <div class="r d4"><div class="snum">500+</div><div class="slbl">Professionals trained</div></div>
+      <div class="r d1"><div class="snum">€1M+</div><div class="slbl">EU funds managed</div></div>
+    </div>
+  </div>
+  <div class="r d2">
+    <p><strong>casogeographics</strong> is a territorial intelligence studio focused on the relationship between products, communities, political behaviour and places. We help companies, institutions, territories and research organisations turn local evidence into development strategies, positioning systems and area-based decisions.</p>
+    <p>We work through three integrated service lines: <strong>Food Intelligence</strong>, <strong>Puglia Territorial Strategy</strong> and <strong>Geo-Historical Political Intelligence</strong>. Each combines field research, GIS, historical analysis, stakeholder knowledge and strategic interpretation.</p>
+    <p>Our approach is evidence-based and place-specific. <strong>We do not apply generic formulas: we reconstruct how a territory actually works and deploy a strategy built around its structures, identities and opportunities.</strong></p>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<!-- FOUNDER -->
+<section class="founder" id="founder">
+  <div class="founder-inner">
+    <div class="founder-photo-wrap reveal">
+      <img class="founder-photo" src="1773770397113.jpg" alt="Antonio Caso — Founder, casogeographics">
+      <div class="founder-photo-label">
+        <span class="founder-name">Antonio Caso</span>
+        <span class="founder-title-label">Founder &amp; Lead Consultant</span>
+      </div>
+    </div>
+    <div class="founder-content reveal d2">
+      <div class="lbl">The founder</div>
+      <h2 class="founder-headline">Food historian.<br>Geographer.<br><em>European strategist.</em></h2>
+      <p class="founder-bio">
+        <strong>casogeographics was founded by Antonio Caso</strong> — food historian, development geographer and European project manager with 7+ years of experience at the intersection of Mediterranean food heritage, territorial strategy and EU-funded development.<br><br>
+        Author of <strong><em>A tavola con gli Apuli</em></strong> (2019) and <strong><em>A tavola con le Aquile</em></strong> (2024) — two research volumes documenting agrifood heritage across Puglia and Albania. <strong>Secretary General of the Fondazione Dieta Mediterranea</strong>. His academic work has been presented at CIHEAM MedForum (Montpellier), published on Encyclopedia.pub, and cited in European food policy contexts.<br><br>
+        He has designed and implemented 30+ projects across 18 countries, managed over €1M in EU grants, and trained 500+ professionals — building the field intelligence that underpins every casogeographics engagement.
+      </p>
+      <div class="founder-tags">
+        <span class="founder-tag">Food Heritage</span>
+        <span class="founder-tag">Mediterranean Diet</span>
+        <span class="founder-tag">EU Project Design</span>
+        <span class="founder-tag">Territorial Strategy</span>
+        <span class="founder-tag">Food Policy</span>
+        <span class="founder-tag">Geographical Indications</span>
+      </div>
+      <div class="founder-links">
+        <a href="https://www.linkedin.com/in/antonio-caso-534a68144/" target="_blank" rel="noopener" class="founder-link">LinkedIn →</a>
+        <a href="https://scholar.google.com" target="_blank" rel="noopener" class="founder-link">Google Scholar →</a>
+        <a href="#contact" class="founder-link">Work together →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section class="vision">
+  <div class="vision-inner reveal">
+    <div class="lbl">Our belief</div>
+    <h2>The next competitive edge<br>will come from <em>territorial intelligence.</em></h2>
+    <p>In food, hospitality, investment, public policy and political strategy, the decisive advantage is understanding why places behave differently. Data matters, but it becomes actionable only when read through history, infrastructure, communities and local knowledge.</p>
+    <p>Territory is not a backdrop. It is a system of resources, memories, networks, institutions and identities. The organisations that understand it first can make better decisions, build stronger strategies and act with greater credibility.</p>
+    <p><strong>casogeographics exists to give them that advantage.</strong></p>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="svc-header r">
+    <div>
+      <div class="lbl">What we do</div>
+      <h2>Three intelligence areas.<br>One territorial method.</h2>
+    </div>
+    <p class="svc-intro">casogeographics studies territories through products, local ecosystems, historical trajectories and political behaviour. Each service line combines research, GIS, field intelligence and strategic interpretation.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card r d1">
+      <img class="svc-img" src="develpoment.jpg" alt="Food Intelligence">
+      <div class="svc-body">
+        <span class="svc-n">01</span>
+        <h3 class="svc-title">Food Intelligence</h3>
+        <p class="svc-desc">Research and strategy for food products, supply chains and food territories: R&amp;D, product innovation, territorial branding, provenance systems and in-depth Terroir Dossiers.</p>
+        <div class="svc-outputs">R&amp;D · Product strategy · Terroir dossiers · Supply-chain intelligence</div>
+        <a class="svc-link" href="#food-intelligence">Explore Food Intelligence →</a>
+      </div>
+    </div>
+    <div class="svc-card r d2">
+      <img class="svc-img" src="puglia-advisory.jpg" alt="Puglia Territorial Strategy">
+      <div class="svc-body">
+        <span class="svc-n">02</span>
+        <h3 class="svc-title">Puglia Territorial Strategy</h3>
+        <p class="svc-desc">Independent territorial intelligence for international organisations, investors and professionals seeking to compare locations, understand local ecosystems and develop informed projects in Puglia.</p>
+        <div class="svc-outputs">Location intelligence · Ecosystem mapping · Field research · Local strategy</div>
+        <a class="svc-link" href="#puglia-advisory">Explore Puglia advisory →</a>
+      </div>
+    </div>
+    <div class="svc-card r d3">
+      <img class="svc-img" src="research.jpg" alt="Geo-Historical Political Intelligence">
+      <div class="svc-body">
+        <span class="svc-n">03</span>
+        <h3 class="svc-title">Geo-Historical Political Intelligence</h3>
+        <p class="svc-desc">Spatial and historical analysis of votes, institutions and territorial behaviour for think tanks, public institutions, political foundations, public-affairs teams and area-based strategy.</p>
+        <div class="svc-outputs">Electoral geography · STRATA framework · Political atlases · Territory dossiers</div>
+        <a class="svc-link" href="#political-intelligence">Explore the political lab →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FOOD INTELLIGENCE -->
+<section class="food-intelligence" id="food-intelligence">
+  <div class="fi-header r">
+    <div>
+      <div class="lbl">Service line 01 · Food Intelligence</div>
+      <h2>From ingredient<br>to <em>territorial strategy.</em></h2>
+    </div>
+    <p class="fi-intro">
+      <strong>Food is both a product and a territorial system.</strong> casogeographics combines food history, development geography, supply-chain research, GIS and market strategy to identify the value embedded in ingredients, producers, landscapes and local knowledge — and translate it into products, positioning and development decisions.
+    </p>
+  </div>
+
+  <div class="fi-feature">
+    <div class="fi-image r d1">
+      <img src="develpoment.jpg" alt="Food intelligence, product research and territorial strategy" loading="lazy">
+      <div class="fi-caption">
+        <span>Evidence before narrative</span>
+        <strong>Products are territories in compressed form.</strong>
+      </div>
+    </div>
+
+    <div class="fi-areas r d2">
+      <article class="fi-area">
+        <span class="fi-area-num">01</span>
+        <h3>R&amp;D and Product Innovation</h3>
+        <p>Research into ingredients, traditional knowledge, biodiversity and market opportunities, translated into product concepts, formulation briefs and innovation pathways.</p>
+      </article>
+
+      <article class="fi-area">
+        <span class="fi-area-num">02</span>
+        <h3>Terroir Dossiers</h3>
+        <p>In-depth reconstruction of the relationship between product and place through GIS, landscape analysis, archival research, producer knowledge and supply-chain evidence.</p>
+      </article>
+
+      <article class="fi-area">
+        <span class="fi-area-num">03</span>
+        <h3>Supply-Chain Intelligence</h3>
+        <p>Mapping of actors, flows, bottlenecks, dependencies and opportunities across local and international food systems, from origin territories to market positioning.</p>
+      </article>
+
+      <article class="fi-area">
+        <span class="fi-area-num">04</span>
+        <h3>Territorial Branding and Provenance</h3>
+        <p>Evidence-based narratives, provenance systems, product geographies, food routes and communication strategies rooted in the actual identity of products and places.</p>
+      </article>
+    </div>
+  </div>
+
+  <div class="fi-output-bar r d3">
+    <p><strong>Typical outputs</strong> · Product concepts · Terroir Dossiers · GIS maps · Supply-chain studies · Provenance systems · Territorial strategies</p>
+    <a class="fi-cta" href="#contact">Discuss a Food Intelligence brief →</a>
+  </div>
+</section>
+
+<!-- PUGLIA TERRITORIAL ADVISORY -->
+<section class="puglia-advisory" id="puglia-advisory">
+  <div class="puglia-advisory-inner">
+
+    <div class="puglia-advisory-image r">
+      <img
+        src="puglia-advisory.jpg"
+        alt="Puglia landscape and territorial advisory"
+        loading="lazy"
+      >
+
+      <div class="puglia-advisory-caption">
+        <span>Regional expertise</span>
+        <strong>Puglia, interpreted from within.</strong>
+      </div>
+    </div>
+
+    <div class="puglia-advisory-content r d2">
+      <div class="lbl">Puglia Territorial Advisory</div>
+
+      <h2>
+        Local intelligence for<br>
+        international projects in <em>Puglia.</em>
+      </h2>
+
+      <p class="puglia-advisory-intro">
+        <strong>casogeographics provides independent territorial intelligence to international professionals, organisations and private clients seeking to understand, evaluate or develop activities in Puglia.</strong>
+      </p>
+
+      <p class="puglia-advisory-text">
+        Puglia is not a single, uniform destination. Its cities, coastal areas, rural landscapes, productive districts and inland communities offer different identities, conditions and opportunities. We help clients understand these differences, compare locations, identify relevant local actors and approach the region with reliable, place-based knowledge.
+      </p>
+
+      <div class="puglia-advisory-list">
+
+        <div class="puglia-advisory-item">
+          <span>01</span>
+          <h3>Area and Location Intelligence</h3>
+          <p>
+            Comparative analysis of different areas of Puglia according to the objectives, priorities and practical needs of each client.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>02</span>
+          <h3>Local Ecosystem Mapping</h3>
+          <p>
+            Identification of institutions, businesses, producers, professionals, service providers and potential local partners.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>03</span>
+          <h3>On-site Territorial Research</h3>
+          <p>
+            Field visits, preliminary reconnaissance, local meetings and direct analysis of the geographical, social and productive context.
+          </p>
+        </div>
+
+        <div class="puglia-advisory-item">
+          <span>04</span>
+          <h3>Food and Cultural Orientation</h3>
+          <p>
+            Interpretation of local food cultures, traditions, seasonal practices and community dynamics across the region.
+          </p>
+        </div>
+
+      </div>
+
+      <a href="#contact" class="puglia-advisory-cta">
+        Discuss a Puglia brief →
+      </a>
+
+      <p class="puglia-advisory-note">
+        Our role is territorial and strategic. We do not operate as a real estate agency, travel agency, legal advisor or tax advisor.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- GEO-HISTORICAL POLITICAL INTELLIGENCE -->
+<section class="political-intelligence" id="political-intelligence">
+  <div class="pi-header r">
+    <div>
+      <div class="lbl">Service line 03 · Geo-Historical Political Intelligence</div>
+      <h2>The long geography<br>of <em>politics.</em></h2>
+    </div>
+    <p class="pi-intro">
+      <strong>A research programme applying geography, historical trajectories and political data to electoral behaviour, territorial governance and neighbourhood-level strategy.</strong> It combines GIS, electoral analysis, urban morphology, infrastructure, social history and local knowledge to understand why political behaviour changes across places.
+    </p>
+  </div>
+
+  <div class="pi-feature r d1">
+    <div class="pi-feature-copy">
+      <span class="pi-feature-label">Research programme</span>
+      <h3>From electoral maps to territorial intelligence.</h3>
+      <p>
+        The programme introduces the STRATA Framework and applies it to Taranto as an urban electoral laboratory before expanding the analysis through a comparative global atlas. The resulting methodology supports think tanks, public institutions, political foundations and strategy teams seeking area-based evidence rather than generic demographic assumptions.
+      </p>
+    </div>
+    <div class="pi-feature-method">
+      <div class="pi-method-title">STRATA Framework</div>
+      <ul class="pi-method-list">
+        <li>Spatial substrate</li>
+        <li>Territorial trajectories</li>
+        <li>Regimes and institutions</li>
+        <li>Actors and social morphology</li>
+        <li>Territorial political outputs</li>
+        <li>Assessment and alternatives</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pi-section-label r">Research publications</div>
+  <div class="pi-docs">
+    <article class="pi-doc-card r d1">
+      <div class="pi-doc-meta"><span>Main report</span><span class="pi-doc-pages">Full study</span></div>
+      <h3>The Long Geography of Politics</h3>
+      <p>The complete methodological and comparative report: political geography, the STRATA Framework, the Taranto case study, global geo-historical mechanisms and the Political Territory Dossier.</p>
+      <a class="pi-doc-link" href="The_Long_Geography_of_Politics_Main_Research_Report.pdf" target="_blank" rel="noopener">Download PDF →</a>
+    </article>
+
+    <article class="pi-doc-card r d2">
+      <div class="pi-doc-meta"><span>Executive brief</span><span class="pi-doc-pages">10–12 pages</span></div>
+      <h3>Executive Brief</h3>
+      <p>A concise introduction for think tanks, institutions, political foundations and public-affairs teams: principal findings, practical applications and the neighbourhood-level analytical model.</p>
+      <a class="pi-doc-link" href="The_Long_Geography_of_Politics_Executive_Brief.pdf" target="_blank" rel="noopener">Download PDF →</a>
+    </article>
+
+    <article class="pi-doc-card r d3">
+      <div class="pi-doc-meta"><span>Methods and data</span><span class="pi-doc-pages">Technical appendix</span></div>
+      <h3>Technical &amp; Data Appendix</h3>
+      <p>Data architecture, indicators, formulas, GIS workflow, audit procedures, statistical safeguards, fieldwork protocols and the complete technical basis of the Taranto pilot.</p>
+      <a class="pi-doc-link" href="The_Long_Geography_of_Politics_Technical_Data_Appendix.pdf" target="_blank" rel="noopener">Download PDF →</a>
+    </article>
+  </div>
+
+  <div class="pi-section-label r">Interactive atlases</div>
+  <div class="pi-atlases">
+    <a class="pi-atlas-card r d1" href="https://apscultum-it.github.io/taranto-electoral-atlas/" target="_blank" rel="noopener">
+      <span class="pi-atlas-tag">Urban electoral geography</span>
+      <h3>Taranto Interactive Electoral Atlas</h3>
+      <p>Explore electoral aggregates, candidate geographies, runoff patterns, territorial weight and neighbourhood-level strategic indicators across the Taranto municipal election.</p>
+      <span class="pi-atlas-open">Open external atlas ↗</span>
+    </a>
+
+    <a class="pi-atlas-card r d2" href="https://apscultum-it.github.io/global-geo-historical-political-atlas/" target="_blank" rel="noopener">
+      <span class="pi-atlas-tag">Comparative political geography</span>
+      <h3>Global Geo-Historical Political Atlas</h3>
+      <p>Seven comparative cases showing how environmental endowments, historical economies, institutions and settlement patterns can persist in contemporary political geography.</p>
+      <span class="pi-atlas-open">Open external atlas ↗</span>
+    </a>
+  </div>
+
+  <p class="pi-note r">
+    The interactive atlases are hosted as separate lightweight web applications. This keeps the main casogeographics website fast while allowing the analytical tools to evolve independently.
+  </p>
+</section>
+
+
+<!-- HOW WE WORK -->
+<section class="hww" id="method">
+  <div class="hww-header reveal">
+    <div class="lbl">Our method</div>
+    <h2>From the territory<br><em>to a deployable strategy.</em></h2>
+  </div>
+  <div class="hww-grid">
+    <div class="hww-step reveal d1">
+      <div class="hww-num">01</div>
+      <div class="hww-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="15" stroke="#c4622d" stroke-width="1"/>
+          <path d="M8 21 C11 16 13 12 16 9 C19 12 21 16 24 21" stroke="#c4622d" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M10 21 H22" stroke="#b8965a" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="hww-title">Supply Chain &amp; Territorial Analysis</h3>
+      <p class="hww-desc">We begin with the product and the places that make it possible. We reconstruct the supply chain, read the landscape and analyse the historical, geographical and productive factors that shape the identity of a food terroir.</p>
+      <ul class="hww-list">
+        <li>Supply-chain mapping</li>
+        <li>GIS territorial analysis</li>
+        <li>Historical &amp; archival research</li>
+        <li>Landscape &amp; biodiversity scan</li>
+      </ul>
+    </div>
+    <div class="hww-step reveal d2">
+      <div class="hww-num">02</div>
+      <div class="hww-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="15" stroke="#c4622d" stroke-width="1"/>
+          <circle cx="12" cy="13" r="3" stroke="#c4622d" stroke-width="1.2"/>
+          <circle cx="21" cy="13" r="2.5" stroke="#c4622d" stroke-width="1.2"/>
+          <path d="M7 23 C8 18 16 18 17 23" stroke="#c4622d" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M18 22 C18.5 19 24 19 25 22" stroke="#b8965a" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="hww-title">Needs Assessment</h3>
+      <p class="hww-desc">We identify the concrete needs of companies, institutions and local stakeholders. The analysis connects territorial assets with market gaps, positioning challenges and realistic opportunities for development.</p>
+      <ul class="hww-list">
+        <li>Stakeholder consultation</li>
+        <li>Needs &amp; opportunity assessment</li>
+        <li>Market &amp; positioning gaps</li>
+        <li>Strategic priorities</li>
+      </ul>
+    </div>
+    <div class="hww-step reveal d3">
+      <div class="hww-num">03</div>
+      <div class="hww-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="15" stroke="#c4622d" stroke-width="1"/>
+          <path d="M9 21 L14 16 L18 19 L24 11" stroke="#c4622d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="11" r="2" fill="#c4622d"/>
+        </svg>
+      </div>
+      <h3 class="hww-title">Strategy &amp; Dossier Deployment</h3>
+      <p class="hww-desc">We translate the research into a deployable strategy or a complete Terroir Dossier. The final output combines territorial narratives, GIS-supported evidence, historical reconstruction and an operational roadmap for valorisation.</p>
+      <ul class="hww-list">
+        <li>Terroir Dossier development</li>
+        <li>Strategy &amp; operational roadmap</li>
+        <li>GIS maps &amp; visual outputs</li>
+        <li>Deployment &amp; handover</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="vbreak">
+  <div class="vbreak-bg"></div>
+  <div class="vbreak-cnt r">
+    <blockquote>"The future of strategy is not a generic model.<br>It is a <em>territory</em> — read through data,<br>history and intelligence."</blockquote>
+    <cite>casogeographics Studio — A Territorial Intelligence Studio</cite>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="portfolio-header reveal">
+    <div class="lbl">Portfolio</div>
+    <h2>Work that proves<br><em>the point.</em></h2>
+    <p class="portfolio-intro">A selection of consulting mandates, territorial strategies and research projects designed, coordinated and delivered by the casogeographics team. More on request.</p>
+  </div>
+
+  <div class="portfolio-grid">
+
+    <div class="pcard reveal d1">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-terr">Food Policy</span><span class="ptag ptag-green">Research</span></div>
+        <div class="pcard-year">2026</div>
+      </div>
+      <h3 class="pcard-title">Food Policy Research<br><em>Global Cities</em></h3>
+      <p class="pcard-desc">An ongoing research programme analysing urban food policy across major European cities. The studies examine how Hamburg, Rotterdam and Brussels are reshaping their food systems — from governance frameworks and sustainability targets to cultural diversity and public health priorities. Each report combines policy analysis, data intelligence and Mediterranean food expertise to extract strategic insights for cities, institutions and businesses operating at metropolitan scale.</p>
+      <div class="pcard-meta"><span class="pmeta-item">🌍 Europe · ✍️ casogeographics Research · 2026</span></div>
+      <div class="pcard-services">R&amp;D · Food Policy · AI &amp; Data Intelligence</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;">
+        <a href="https://www.casogeographicsstudio.cloud/hamburg-food-policy.pdf" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terracotta);text-decoration:none;border-bottom:1px solid rgba(196,98,45,.3);padding-bottom:2px;">📄 Hamburg Food Policy Study →</a>
+        <a href="https://www.casogeographicsstudio.cloud/brussels-food-policy.pdf" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terracotta);text-decoration:none;border-bottom:1px solid rgba(196,98,45,.3);padding-bottom:2px;">📄 Brussels Food Policy Study →</a>
+        <a href="https://www.casogeographicsstudio.cloud/rotterdam-food-policy.pdf" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--terracotta);text-decoration:none;border-bottom:1px solid rgba(196,98,45,.3);padding-bottom:2px;">📄 Rotterdam Food Policy Study →</a>
+      </div>
+    </div>
+        <div class="pcard reveal d1">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-terr">R&D</span><span class="ptag ptag-green">Agrifood</span></div>
+        <div class="pcard-year">2026</div>
+      </div>
+      <h3 class="pcard-title">Really Hempful!<br><em>Research &amp; Development Research</em></h3>
+      <p class="pcard-desc">Best practices KA220 Erasmus+ project written by Dr. Antonio Caso and coordinated by the Hohenheim University with European Industrial Hemp Association and the CzecHemp consortium. During the project, several training content such as a handbook, a series of podcasts and a scientific state of the art have been developed and the beta-testing of the first European "Hemp specialist" 2-years curriculum has been implemented in Greece and Bulgaria. The project involved partners from Germany, Belgium, Italy, Czech Republic, Lithuania, Bulgaria and Greece</p>
+      <div class="pcard-meta"><span class="pmeta-item">📍 Stuttgart, Germany · ✍️ Dr. Antonio Caso</span></div>
+      <div class="pcard-services">R&amp;D · Agrifood &amp; Agriculture · Territorial development </div>
+              <a href="https://www.reallyhempful.eu" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);text-decoration:none;border-bottom:1px solid rgba(158,148,133,.3);padding-bottom:2px;">📄 Really Hempful! →</a>
+    </div>
+      <div class="pcard reveal d3">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-terr">Territorial Strategy</span><span class="ptag ptag-green">Institutional</span></div>
+        <div class="pcard-year">2026</div>
+      </div>
+      <h3 class="pcard-title">Comune di Taranto<br><em>Mediterranean Games 2026</em></h3>
+      <p class="pcard-desc">Strategic consulting and operational toolkit design for the XX Mediterranean Games — the largest multisport event in the Mediterranean, with 26 participating nations. Delivered halal-friendly protocols, plant-based food strategy, intercultural training and a public digital portal for HoReCa operators across Taranto. We developed a tailor-made research on food products branding related to the Taranto area, so becoming the official food products of the Mediterranean Games Taranto 2026</p>
+      <div class="pcard-meta"><span class="pmeta-item">🏛️ Comune di Taranto · FIC Puglia · TA2026 · 26 Nations</span></div>
+      <div class="pcard-services">Food Strategy · Training Design · Territorial Branding</div>
+      <a href="https://antocaso21.github.io/toolkit-taranto-2026/" target="_blank" rel="noopener" class="pcard-link">View project →</a>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+        <a href="https://www.casogeographicsstudio.cloud/sapori-taranto.pdf" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);text-decoration:none;border-bottom:1px solid rgba(158,148,133,.3);padding-bottom:2px;">📄 I Sapori di Taranto →</a>
+        <a href="https://www.casogeographicsstudio.cloud/tesori-taranto.pdf" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);text-decoration:none;border-bottom:1px solid rgba(158,148,133,.3);padding-bottom:2px;">📄 I Sapori di Taranto →</a>
+      </div>
+    </div>
+        <div class="pcard reveal d3">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-terr">R&D</span><span class="ptag ptag-green">Food Law</span></div>
+        <div class="pcard-year">2023–2025</div>
+      </div>
+      <h3 class="pcard-title">Albania DOP &amp; IGP<br><em>National GI Prospection Study</em></h3>
+      <p class="pcard-desc">A three-year confidential field study assessing the potential for Protected Designations of Origin and Geographical Indications across Albania. Seven supply chains were analysed in depth across the entire country — mapping products, producers, territorial identity and legal eligibility within the EU GI framework. One of the most comprehensive food intelligence studies ever conducted on Albanian agri-food heritage.</p>
+      <div class="pcard-meta"><span class="pmeta-item">🌍 Albania · ✍️ Dr. Antonio Caso · 🔒 Reserved</span></div>
+      <div class="pcard-services">R&amp;D · Food Law &amp; Certification · Territorial Intelligence</div>
+    </div>
+     <div class="pcard reveal d2">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-green">Export Strategy</span><span class="ptag ptag-terr">Olive Oil</span></div>
+        <div class="pcard-year">2025</div>
+      </div>
+      <h3 class="pcard-title">Leading Apulian<br><em>Olive Oil Producer</em></h3>
+      <p class="pcard-desc">Strategic advisory for an Apulian olive oil producer operating in the United States market. Market positioning analysis, competitive landscape assessment and a go-to-market strategy — helping the company strengthen its value proposition for the American premium food buyer.</p>
+      <div class="pcard-meta"><span class="pmeta-item">🌍 Puglia → United States · 🫒 Confidential</span></div>
+      <div class="pcard-services">Business Development · Marketing &amp; Branding · Food Strategy</div>
+    </div>
+    <div class="pcard reveal d1">
+      <div class="pcard-top">
+        <div class="pcard-tags"><span class="ptag ptag-terr">Territorial Strategy</span><span class="ptag ptag-green">GAL</span></div>
+        <div class="pcard-year">2023</div>
+      </div>
+      <h3 class="pcard-title">GAL Daunia Rurale 2020<br><em>Local Development Strategy 2023–2027</em></h3>
+      <p class="pcard-desc">Full mandate for the design and delivery of the Local Development Strategy — territorial analysis, stakeholder consultation, facilitation of working groups and final document drafting. A four-year strategic framework for rural development in the Daunia area of Puglia.</p>
+      <div class="pcard-meta"><span class="pmeta-item">📍 Daunia, Puglia · 🏛️ GAL Daunia Rurale 2020</span></div>
+      <div class="pcard-services">Territorial Strategy · R&amp;D · Project Design</div>
+    </div>
+  </div>
+
+  <div class="portfolio-also reveal" style="margin-top:56px">
+    <div class="ptier-label">
+      <span class="ptier-dot" style="background:rgba(184,150,90,.5)"></span>
+      European Project Design &amp; Implementation — KA220 / KA210
+    </div>
+    <p class="portfolio-also-intro">The following projects were designed, written and — where funded — implemented in partnership with the organisations listed in our partner network. They are the reason those partnerships exist.</p>
+    <div class="also-grid">
+
+      <div class="also-card">
+        <div class="also-name">INNOWINE</div>
+        <div class="also-meta">KA220-VET · €400,000 · Università di Foggia (Lead) · IT · AL · GR · ES</div>
+        <div class="also-desc">Designed the full innovation architecture for sustainable non-alcoholic wine — Smart Label Toolkit, MOOC, Gamified Simulator, Producers' Handbook and territorial pilots in 4 countries.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">CLAN MEDITERRANEAN</div>
+        <div class="also-meta">KA220-VET · €400,000 · CCI Côte d'Azur · FR · IT · GR · AL</div>
+        <div class="also-desc">Conceived and wrote the Mediterranean Narrative Menu System — a transferable VET model for sustainable gastronomy with 40–60 narrative menus, Micro-MOOCs and a full curriculum.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">Breaking Bread!</div>
+        <div class="also-meta">KA220-VET · €400,000 · Arcadia Coop (Lead) · 6 EU Countries · ROMPAN (RO)</div>
+        <div class="also-desc">Co-designed the "Sustainable Bakery Operator" European VET curriculum — handbook, Local Bakery Labs model, podcast series and permanent training platform across 6 countries.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">NUTS AS ROOTS</div>
+        <div class="also-meta">KA220-VET · €400,000 · Molise verso il 2000 (Lead) · GAL Molise · IT</div>
+        <div class="also-desc">Designed the "Nuts Specialist" European professional profile — research framework, digital game, mentoring model for 24 producers and georeferenced policy recommendations.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">PRESS PLAY!</div>
+        <div class="also-meta">KA220-VET · €400,000 · Europe United (Lead) · IT · Multi-country</div>
+        <div class="also-desc">Conceived the "Olive Oil Pairing &amp; Innovation Designer" — new European VET profile and the EVOO Academy Hub, integrating sensory education, biodiversity and digital storytelling.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">E-Lit Adults</div>
+        <div class="also-meta">KA220-ADU · €250,000 · KTU Kaunas (Lead) · GR · IT · LT · AT · BG</div>
+        <div class="also-desc">Contributed as Italian research partner — coordinating data collection, stakeholder engagement and national report drafting on climate attitudes and energy literacy across EU countries.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">GreenGrowth Academy</div>
+        <div class="also-meta">KA210-VET · Cultum (Lead) · IT · Multi-country</div>
+        <div class="also-desc">Designed the educational framework connecting wild herb botanical knowledge with green entrepreneurship for VET teachers and students. Led and written by Cultum.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">FireSmart</div>
+        <div class="also-meta">KA220-SCH · €400,000 · Dideas S.L. (Lead) · ES · IT · Pau Costa Foundation</div>
+        <div class="also-desc">Co-designed the educational and digital architecture for wildfire-risk prevention in schools — STEAM methodologies, community mapping and georeferenced policy recommendations.</div>
+      </div>
+
+      <div class="also-card">
+        <div class="also-name">EMBRACE &amp; E-Lit Adults</div>
+        <div class="also-meta">KA220-ADU · €250,000 · KTU Kaunas (Lead) · GR · IT · LT · AT · BG</div>
+        <div class="also-desc">Contributed as Italian research partner — coordinating data collection, stakeholder engagement and national report drafting on climate attitudes and energy literacy across EU countries.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- PUBLICATIONS -->
+<section id="pubblicazioni" style="padding:100px 60px;background:var(--cream);">
+  <div class="r">
+    <div class="lbl">Publications</div>
+    <h2>Research &amp; Scholarship</h2>
+    <p style="max-width:640px;color:var(--stone);font-size:16px;line-height:1.7;margin-bottom:56px;">Scientific contributions, encyclopaedia entries and international conference presentations — where field research meets academic dissemination.</p>
+  </div>
+
+  <div class="pub-books reveal" style="margin-bottom:56px;">
+    <div class="book-card">
+      <div class="book-cover" style="padding:0;background:#1a1712;min-height:220px;overflow:hidden;">
+        <img src="libricaso.png" alt="A tavola con gli Apuli" style="width:100%;height:100%;object-fit:cover;object-position:left center;display:block;min-height:220px;">
+      </div>
+      <div class="book-info">
+        <div class="book-type">Research · Food Heritage</div>
+        <div class="book-title">A tavola con gli Apuli</div>
+        <div class="book-subtitle">An enogastronomical journey through ancient vegetarian Apulian food products — legumes, grains, wild herbs, ancient varieties. A field research volume documenting the living Mediterranean diet as practiced in Puglia.</div>
+        <a href="https://www.amazon.it/s?k=a+tavola+con+gli+apuli+antonio+caso" target="_blank" rel="noopener" class="book-buy">Buy the book →</a>
+      </div>
+    </div>
+    <div class="book-card">
+      <div class="book-cover" style="padding:0;background:#1a1712;min-height:220px;overflow:hidden;">
+        <img src="libricasoalbania.png" alt="A tavola con le Aquile" style="width:100%;height:100%;object-fit:cover;object-position:right center;display:block;min-height:220px;">
+      </div>
+      <div class="book-info">
+        <div class="book-type">Research · Cross-border Heritage</div>
+        <div class="book-title">A tavola con le Aquile</div>
+        <div class="book-subtitle">A research volume on agrifood heritage across Albania — exploring the food cultures, ingredients and culinary traditions that connect the Albanian territories to the broader Mediterranean food system.</div>
+        <a href="https://www.amazon.it/s?k=a+tavola+con+le+aquile+antonio+caso" target="_blank" rel="noopener" class="book-buy">Buy the book →</a>
+      </div>
+    </div>
+     <div class="book-card">
+      <div class="book-cover" style="padding:0;background:#1a1712;min-height:220px;overflow:hidden;">
+        <img src="libricasocanapa.png" alt="Really Hempful! Handbook" style="width:100%;height:100%;object-fit:cover;object-position:right center;display:block;min-height:220px;">
+      </div>
+      <div class="book-info">
+        <div class="book-type">Research · Agriculture</div>
+        <div class="book-title">Really Hempful! Handbook</div>
+        <div class="book-subtitle">This resource covers various aspects of the hemp industry, including scientific principles, circularity, networking, marketing, entrepreneurship, and funding opportunities.</div>
+        <a href="https://drive.google.com/file/d/140UR_XQMrfD4NkrmO98STIejNnGHUoZE/view" target="_blank" rel="noopener" class="book-buy">Read the book →</a>
+      </div>
+    </div>
+         <div class="book-card">
+      <div class="book-cover" style="padding:0;background:#1a1712;min-height:220px;overflow:hidden;">
+        <img src="libricasocesram.png" alt="Public History: teorie, pratiche e prospettive del Metodo CESRAM" style="width:100%;height:100%;object-fit:cover;object-position:right center;display:block;min-height:220px;">
+      </div>
+      <div class="book-info">
+        <div class="book-type">Research · Cross-border Heritage</div>
+        <div class="book-title">Public History: teorie, pratiche e prospettive del Metodo CESRAM</div>
+        <div class="book-subtitle">A research volume on public history and its methodology — exploring the integration between territorial cultures, history, communities and European dimension.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pub-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1200px;margin:0 auto;">
+
+    <!-- Publication 1 -->
+    <div style="background:var(--card);border:1px solid rgba(184,150,90,.15);border-radius:8px;padding:32px;display:flex;flex-direction:column;gap:16px;transition:border-color .25s;" onmouseover="this.style.borderColor='rgba(184,150,90,.45)'" onmouseout="this.style.borderColor='rgba(184,150,90,.15)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+        <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;">Encyclopaedia entry</span>
+        <span style="font-size:11px;color:var(--stone);opacity:.6;">2022</span>
+      </div>
+      <h3 style="font-family:var(--serif);font-size:17px;font-weight:400;line-height:1.45;color:var(--ink);">Mediterranean Diet — Historical &amp; Cultural Perspectives</h3>
+      <p style="font-size:13px;color:var(--stone);line-height:1.65;flex-grow:1;">Encyclopaedia entry published on <em>Encyclopedia.pub</em> exploring the Mediterranean Diet — its historical roots, cultural identity and contemporary relevance as intangible food heritage.</p>
+      <div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(158,148,133,.15);padding-top:16px;">
+        <span style="font-size:11px;color:var(--stone);">Encyclopedia.pub</span>
+        <a href="https://encyclopedia.pub/entry/history/show/84515" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;margin-top:4px;">Read the entry →</a>
+      </div>
+    </div>
+
+    <!-- Publication 2 -->
+    <div style="background:var(--card);border:1px solid rgba(184,150,90,.15);border-radius:8px;padding:32px;display:flex;flex-direction:column;gap:16px;transition:border-color .25s;" onmouseover="this.style.borderColor='rgba(184,150,90,.45)'" onmouseout="this.style.borderColor='rgba(184,150,90,.15)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+        <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;">Conference presentation</span>
+        <span style="font-size:11px;color:var(--stone);opacity:.6;">2021</span>
+      </div>
+      <h3 style="font-family:var(--serif);font-size:17px;font-weight:400;line-height:1.45;color:var(--ink);">Mediterranean Food Systems &amp; Territorial Identity</h3>
+      <p style="font-size:13px;color:var(--stone);line-height:1.65;flex-grow:1;">Presentation at <em>MedForum 2021 — CIHEAM Mediterranean Forum</em> (Montpellier, July 2021). Contribution on Mediterranean food systems, territorial identity and GI valorisation strategies in the Euro-Mediterranean context.</p>
+      <div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(158,148,133,.15);padding-top:16px;">
+        <span style="font-size:11px;color:var(--stone);">CIHEAM MedForum 2021</span>
+        <a href="https://forumciheam2021.sciencesconf.org/data/program/22_MedForum_361360_Caso_Antonio_06072021_15h10.pptx" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;margin-top:4px;">Read the entry →</a>
+      </div>
+    </div>
+
+    <!-- Publication 3 -->
+    <div style="background:var(--card);border:1px solid rgba(184,150,90,.15);border-radius:8px;padding:32px;display:flex;flex-direction:column;gap:16px;transition:border-color .25s;" onmouseover="this.style.borderColor='rgba(184,150,90,.45)'" onmouseout="this.style.borderColor='rgba(184,150,90,.15)'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+        <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;">Research paper</span>
+        <span style="font-size:11px;color:var(--stone);opacity:.6;">2022</span>
+      </div>
+      <h3 style="font-family:var(--serif);font-size:17px;font-weight:400;line-height:1.45;color:var(--ink);">Mediterranean Food Identity &amp; Geographical Indications</h3>
+      <p style="font-size:13px;color:var(--stone);line-height:1.65;flex-grow:1;">Academic research contribution examining Mediterranean food identity, designations of origin and the strategic valorisation of territorial gastronomic heritage within European food law frameworks.</p>
+      <div style="display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(158,148,133,.15);padding-top:16px;">
+        <span style="font-size:11px;color:var(--stone);">Google Scholar</span>
+        <a href="https://drive.google.com/file/d/173pOCXCl1ZSuE2FGxCcZ8bJXeA5qQKsG/view" target="_blank" rel="noopener" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;margin-top:4px;">Read the entry →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+<section class="eco" id="ecosystem">
+  <div class="r">
+    <div class="lbl">The ecosystem</div>
+    <h2>casogeographics.<br>Cultum.</h2>
+    <p>Two complementary realities that cover the full spectrum — from private market consulting to non-profit projects and community initiatives.</p>
+    <p>A structure designed to maximise impact on every front, with complete coherence of values.</p>
+  </div>
+  <div class="eco-cards">
+    <div class="eco-card r d1">
+      <div class="eco-logo-wrap"><svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24" cy="24" r="23" fill="none" stroke="#c4622d" stroke-width="1"/>
+  <path d="M 30 14 C 30 14 18 14 18 20 C 18 26 30 22 30 28 C 30 34 18 34 18 34" fill="none" stroke="#c4622d" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="38" x2="34" y2="38" stroke="#b8965a" stroke-width="0.8" opacity="0.6"/>
+</svg></div>
+      <div>
+        <div class="eco-lbl">Professional Association</div>
+        <h4>casogeographics</h4>
+        <p>The commercial hub. Consulting, strategy, certifications and development for companies, institutions and international markets.</p>
+      </div>
+    </div>
+    <div class="eco-card r d2">
+      <div class="eco-logo-wrap eco-logo-cultum">
+        <img src="https://static.wixstatic.com/media/ad4800_82b73bcb2a3f49d2b7c197d8f417dafd~mv2.png/v1/fill/w_201,h_111,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo%20ultum2.png" alt="Cultum" class="cultum-logo-img">
+      </div>
+      <div>
+        <div class="eco-lbl">NGO Partner</div>
+        <h4>Cultum</h4>
+        <p>The non-profit hub. European projects, educational and cultural activities in rural areas, financed by public and EU funds.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="clients" id="partners">
+  <div class="lbl r">Partners &amp; Clients</div>
+  <div class="partner-grid r d1">
+    <a href="https://www.unifg.it/it" target="_blank" rel="noopener" class="partner-item">
+      <img src="data:image/png;base64,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" alt="Università di Foggia" class="partner-favicon" style="width:52px;height:auto" onerror="this.style.display='none'">
+      <span class="partner-name">Università di Foggia</span>
+    </a>
+    <a href="https://www.uni-hohenheim.de/en" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=uni-hohenheim.de&sz=64" alt="Hohenheim University" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Hohenheim University</span>
+    </a>
+    <a href="https://www.unipr.it" target="_blank" rel="noopener" class="partner-item">
+      <img src="data:image/png;base64,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" alt="Università di Parma" class="partner-favicon" style="width:52px;height:auto" onerror="this.style.display='none'">
+      <span class="partner-name">Università di Parma</span>
+    </a>
+    <a href="https://www.uniba.it" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=uniba.it&sz=64" alt="Università di Bari" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Università di Bari</span>
+    </a>
+    <a href="https://en.ktu.edu" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=ktu.edu&sz=64" alt="Kaunas Technology University" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Kaunas Technology University</span>
+    </a>
+    <a href="https://www.ujaen.es/en" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=ujaen.es&sz=64" alt="Univ. Jaén" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Univ. Jaén</span>
+    </a>
+    <a href="https://uamd.edu.al/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=uamd.edu.al&sz=64" alt="Univ. Aleksander Moisiu" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Univ. Aleksander Moisiu</span>
+    </a>
+    <a href="https://www.galdauniarurale2020.it/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=galdauniarurale2020.it&sz=64" alt="GAL Daunia Rurale 2020" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">GAL Daunia Rurale 2020</span>
+    </a>
+    <a href="https://www.meridaunia.it/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=meridaunia.it&sz=64" alt="GAL Meridaunia" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">GAL Meridaunia</span>
+    </a>
+    <a href="https://www.galmolise.it/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=galmolise.it&sz=64" alt="GAL Molise" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">GAL Molise</span>
+    </a>
+    <a href="https://darepuglia.it/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=darepuglia.it&sz=64" alt="DarePuglia" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">DarePuglia</span>
+    </a>
+    <a href="https://www.comune.taranto.it/it" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=comune.taranto.it&sz=64" alt="Comune di Taranto" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Comune di Taranto</span>
+    </a>
+    <a href="https://www.ta2026.com/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=ta2026.com&sz=64" alt="Taranto 2026" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Taranto 2026</span>
+    </a>
+    <a href="https://www.dietamediterranea.com" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=dietamediterranea.com&sz=64" alt="Fondazione Dieta Mediterranea" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Fondazione Dieta Mediterranea ✦</span>
+    </a>
+    <a href="https://www.paucostafoundation.org/en/organization/" target="_blank" rel="noopener" class="partner-item">
+      <img src="data:image/png;base64,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" alt="Pau Costa Foundation" class="partner-favicon" style="width:88px;height:auto" onerror="this.style.display='none'">
+      <span class="partner-name">Pau Costa Foundation</span>
+    </a>
+    <a href="https://cijm.org.gr/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=cijm.org.gr&sz=64" alt="CIJM" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">CIJM</span>
+    </a>
+    <a href="https://mycountryeurope.com/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=mycountryeurope.com&sz=64" alt="My Country Europe" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">My Country Europe</span>
+    </a>
+    <a href="https://anrd.al/homepage/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=anrd.al&sz=64" alt="ANRD Albania" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">ANRD Albania</span>
+    </a>
+    <a href="https://www.celei.org" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=celei.org&sz=64" alt="CELEI" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">CELEI</span>
+    </a>
+    <a href="https://www.cote-azur.cci.fr/" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=cote-azur.cci.fr&sz=64" alt="CCI Côte d'Azur" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">CCI Côte d'Azur</span>
+    </a>
+    <a href="https://www.innovi.cat/?lang=en" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=innovi.cat&sz=64" alt="Innovi" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Innovi</span>
+    </a>
+    <a href="https://voxeurop.eu" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=voxeurop.eu&sz=64" alt="Voxeurop" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Voxeurop</span>
+    </a>
+    <a href="https://rompan.ro" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=rompan.ro&sz=64" alt="ROMPAN" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">ROMPAN</span>
+    </a>
+    <a href="https://www.safefoodadvocacy.eu" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=safefoodadvocacy.eu&sz=64" alt="SAFE Food Advocacy" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">SAFE Food Advocacy</span>
+    </a>
+    <a href="https://www.ergasiakek.gr/en" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=ergasiakek.gr&sz=64" alt="Ergasia KEK" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Ergasia KEK</span>
+    </a>
+    <a href="https://www.charge.no" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=charge.no&sz=64" alt="Charge" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Charge</span>
+    </a>
+    <a href="https://www.norban.no" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=norban.no&sz=64" alt="Norban" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Norban</span>
+    </a>
+    <a href="https://www.tracesdreams.com" target="_blank" rel="noopener" class="partner-item">
+      <img src="https://www.google.com/s2/favicons?domain=tracesdreams.com&sz=64" alt="Traces & Dreams" class="partner-favicon" onerror="this.style.display='none'">
+      <span class="partner-name">Traces & Dreams</span>
+    </a>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="r">
+    <div class="lbl">Contact</div>
+    <h2>Let's design<br>your next move.</h2>
+    <p>Every great project begins with a clear question. Tell us your challenge — wherever food meets business, culture, law or innovation — and we'll design the right answer together.</p>
+<div class="contact-details">
+  <a href="mailto:casogeographics@gmail.com" class="contact-detail">
+    <span class="cd-label">Email</span>
+    <span class="cd-value">casogeographics@gmail.com</span>
+  </a>
+</div>
+      <a href="tel:+393289318282" class="contact-detail">
+        <span class="cd-label">Phone</span>
+        <span class="cd-value">+39 328 931 8282</span>
+      </a>
+    </div>
+  </div>
+  <form class="cf r d2" action="mailto:casogeographics@gmail.com" method="POST" enctype="text/plain">
+    <div class="frow">
+      <div class="ff"><label>Name</label><input type="text" placeholder="Your name"></div>
+      <div class="ff"><label>Organisation</label><input type="text" placeholder="Company / Institution"></div>
+    </div>
+    <div class="ff"><label>Email</label><input type="email" placeholder="name@example.com"></div>
+    <div class="ff">
+      <label>Area of interest</label>
+      <select>
+        <option value="" disabled selected>Select a service</option>
+        <option>Food Intelligence</option>
+        <option>Puglia Territorial Strategy</option>
+        <option>Geo-Historical Political Intelligence</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="ff"><label>Your project</label><textarea placeholder="Tell us briefly what you need..."></textarea></div>
+    <button type="submit" class="btn-s">Send Message →</button>
+  </form>
+</section>
+
+<footer>
+  <div>
+    <div class="f-logo"><img src="logo.jpg" alt="casogeographics"></div>
+    <div class="f-payoff">Territorial Intelligence for a Changing World</div>
+    <div class="f-contacts">
+<a href="mailto:casogeographics@gmail.com" class="f-contact">casogeographics@gmail.com</a>      
+      <a href="tel:+393289318282" class="f-contact">+39 328 931 8282</a>
+    </div>
+  </div>
+  <ul class="f-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+<div class="f-bar">
+  <p>© 2026 Casogeographics Studio — Professional Association. Individual VAT numbers.</p>
+  <div class="f-eco">
+    <span>Partner: <b>Cultum NGO</b></span>
+    
+  </div>
+
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('s', window.scrollY > 50));
+  const mm = document.getElementById('mm');
+  document.getElementById('bg').addEventListener('click', () => mm.classList.add('open'));
+  document.getElementById('mc').addEventListener('click', () => mm.classList.remove('open'));
+  function cm() { mm.classList.remove('open'); }
+  const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.1});
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
