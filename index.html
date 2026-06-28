@@ -143,8 +143,18 @@
   .eu-pill { margin-left:auto; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(184,150,90,.4); padding:7px 16px; white-space:nowrap; flex-shrink:0; }
 
   /* VISUAL BREAK */
-  .vbreak { height:66vh; position:relative; overflow:hidden; display:flex; align-items:center; }
-  .vbreak-bg { position:absolute; inset:0; background: linear-gradient(to right,rgba(26,23,18,.88) 44%,rgba(26,23,18,.28) 100%), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1800&q=80') center/cover no-repeat; }
+.vbreak-bg {
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(26,23,18,.88) 44%,
+      rgba(26,23,18,.28) 100%
+    ),
+    url('https://pixabay.com/photos/hills-florence-tuscany-italy-6979052/')
+    center/cover no-repeat;
+}
   .vbreak-cnt { position:relative; padding:0 60px; max-width:680px; }
   .vbreak-cnt blockquote { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,4vw,46px); font-weight:300; font-style:italic; color:var(--wheat); line-height:1.32; margin-bottom:26px; }
   .vbreak-cnt cite { font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); font-style:normal; display:flex; align-items:center; gap:14px; }
