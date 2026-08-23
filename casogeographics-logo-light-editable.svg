@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="360" viewBox="0 0 1600 360">
+  <title>CasoGeographics primary logo for dark backgrounds</title>
+  <g id="route-monogram" transform="translate(20 10)">
+    <path d="M280 68C242 28 150 30 100 85 47 143 64 253 144 289c65 29 134-3 146-71h-86" fill="none" stroke="#f4f5ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M204 218h100v-76h-62" fill="none" stroke="#9564ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M304 142h56l48-48" fill="none" stroke="#38f4bb" stroke-width="24" stroke-linecap="round"/>
+    <path d="M383 94h25v25" fill="none" stroke="#b8ff3d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="204" cy="218" r="11" fill="#b8ff3d"/>
+  </g>
+  <text x="410" y="206" fill="#f4f5ff" font-family="URW Gothic, DejaVu Sans, sans-serif" font-size="102" font-weight="400" letter-spacing="-1">caso</text>
+  <text x="645" y="206" fill="#f4f5ff" font-family="URW Gothic, DejaVu Sans, sans-serif" font-size="102" font-weight="700" letter-spacing="-1">geographics</text>
+  <text x="414" y="273" fill="#a3a9c3" font-family="DejaVu Sans Mono, monospace" font-size="19" letter-spacing="6">FROM IDEA TO DESTINATION</text>
+</svg>

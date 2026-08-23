@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 360 340">
+  <title>CasoGeographics route monogram for dark backgrounds</title>
+  <path d="M280 68C242 28 150 30 100 85 47 143 64 253 144 289c65 29 134-3 146-71h-86" fill="none" stroke="#f4f5ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M204 218h100v-76h-62" fill="none" stroke="#9564ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M304 142h32l16-16" fill="none" stroke="#38f4bb" stroke-width="24" stroke-linecap="round"/>
+  <path d="M327 126h25v25" fill="none" stroke="#b8ff3d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="204" cy="218" r="11" fill="#b8ff3d"/>
+</svg>

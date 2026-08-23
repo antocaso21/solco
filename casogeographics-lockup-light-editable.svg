@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="430" viewBox="0 0 1600 430">
+  <title>CasoGeographics extended logo lockup for dark backgrounds</title>
+  <g id="route-monogram" transform="translate(20 25)">
+    <path d="M280 68C242 28 150 30 100 85 47 143 64 253 144 289c65 29 134-3 146-71h-86" fill="none" stroke="#f4f5ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M204 218h100v-76h-62" fill="none" stroke="#9564ff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M304 142h56l48-48" fill="none" stroke="#38f4bb" stroke-width="24" stroke-linecap="round"/>
+    <path d="M383 94h25v25" fill="none" stroke="#b8ff3d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="204" cy="218" r="11" fill="#b8ff3d"/>
+  </g>
+  <text x="410" y="221" fill="#f4f5ff" font-family="URW Gothic, DejaVu Sans, sans-serif" font-size="102" font-weight="400" letter-spacing="-1">caso</text>
+  <text x="645" y="221" fill="#f4f5ff" font-family="URW Gothic, DejaVu Sans, sans-serif" font-size="102" font-weight="700" letter-spacing="-1">geographics</text>
+  <text x="414" y="288" fill="#a3a9c3" font-family="DejaVu Sans Mono, monospace" font-size="19" letter-spacing="6">FROM IDEA TO DESTINATION</text>
+  <g transform="translate(414 334)">
+    <circle cx="8" cy="8" r="8" fill="#b8ff3d"/>
+    <path d="M34 8h215" stroke="#313852" stroke-width="2"/>
+    <circle cx="276" cy="8" r="8" fill="#9564ff"/>
+    <path d="M302 8h215" stroke="#313852" stroke-width="2"/>
+    <circle cx="544" cy="8" r="8" fill="#38f4bb"/>
+    <text x="580" y="15" fill="#a3a9c3" font-family="DejaVu Sans Mono, monospace" font-size="17" letter-spacing="4">LAND · SCREEN · ARENA</text>
+  </g>
+</svg>
